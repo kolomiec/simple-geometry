@@ -1,4 +1,4 @@
-package uk.ks.jarvis.simple.geometry.activity.activity;
+package uk.ks.jarvis.simple.geometry.activity;
 
 import android.os.Bundle;
 import android.app.Activity;
