@@ -1,7 +1,8 @@
 package uk.ks.jarvis.simple.geometry.activities;
 
-import android.R;
 import android.os.Bundle;
+
+import uk.ks.jarvis.simple.geometry.R;
 
 
 /**

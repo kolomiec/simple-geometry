@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Simple Geometry</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="app_name" >Geometry
+    </string>
+    <string name="action_settings" >Settings
+    </string>
+    <string name="hello_world" >Hello world!
+    </string>
+    <string name="dot">Dot</string>
+    <string name="circle">Circle</string>
+    <string name="line">Line</string>
+    <string name="endlessLine">Endless line</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="scale">Turn on/off scale</string>
+    <string name="theme">Change color theme</string>
 </resources>

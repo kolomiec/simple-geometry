@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import uk.ks.jarvis.simple.geometry.R;
+import uk.ks.jarvis.simple.geometry.activities.PreferenceActivity;
 import uk.ks.jarvis.simple.geometry.holders.BaseHolder;
 
 

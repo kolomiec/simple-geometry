@@ -10,6 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import uk.ks.jarvis.simple.geometry.R;
+import uk.ks.jarvis.simple.geometry.holders.BaseHolder;
+import uk.ks.jarvis.simple.geometry.shapes.Circle;
+import uk.ks.jarvis.simple.geometry.shapes.Dot;
+import uk.ks.jarvis.simple.geometry.shapes.Line;
+import uk.ks.jarvis.simple.geometry.shapes.Shape;
+import uk.ks.jarvis.simple.geometry.shapes.ShapeList;
 
 
 /**

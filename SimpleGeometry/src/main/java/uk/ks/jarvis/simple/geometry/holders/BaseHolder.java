@@ -13,7 +13,18 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.ks.jarvis.simple.geometry.CoordinatePlane.CoordinateSystem;
+import uk.ks.jarvis.simple.geometry.CoordinatePlane.SystemInformation;
 import uk.ks.jarvis.simple.geometry.beans.Point;
+import uk.ks.jarvis.simple.geometry.fragments.CreateFigureDialog;
+import uk.ks.jarvis.simple.geometry.fragments.ShapeDialog;
+import uk.ks.jarvis.simple.geometry.shapes.Circle;
+import uk.ks.jarvis.simple.geometry.shapes.Dot;
+import uk.ks.jarvis.simple.geometry.shapes.EndlessLine;
+import uk.ks.jarvis.simple.geometry.shapes.Line;
+import uk.ks.jarvis.simple.geometry.shapes.Shape;
+import uk.ks.jarvis.simple.geometry.shapes.ShapeList;
+import uk.ks.jarvis.simple.geometry.utils.ColorTheme;
 
 
 /**
