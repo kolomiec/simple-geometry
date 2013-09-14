@@ -11,7 +11,7 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 /**
  * Created by sayenko on 7/26/13.
  */
-public class Circle implements Shape {
+public class Circle extends BaseShape {
 
     private final String label;
     public int color = 0;
@@ -124,6 +124,11 @@ public class Circle implements Shape {
     }
 
     @Override
+    public String getLabel() {
+        return this.getLabel();
+    }
+
+    @Override
     public boolean isTouched(Point point) {
         radiusChangeMode = false;
         setPoint(lastTouchCoordinates, point);
@@ -196,4 +201,5 @@ public class Circle implements Shape {
     public void changeRadius(Point point) {
         radius = BaseHelper.getLengthBetweenTwoPoints(this.centerPoint, point);
     }
+
 }

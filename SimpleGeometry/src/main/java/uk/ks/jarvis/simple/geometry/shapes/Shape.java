@@ -32,4 +32,5 @@ public interface Shape {
 
     public void changeCoordinatesToDelta(Point delta);
 
+    public String getLabel();
 }

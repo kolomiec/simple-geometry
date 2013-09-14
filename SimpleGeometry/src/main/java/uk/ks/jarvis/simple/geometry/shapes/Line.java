@@ -13,7 +13,7 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
  * Created by sayenko on 7/17/13.
  */
 
-public class Line implements Shape {
+public class Line extends BaseShape {
     private final String label1;
     private final String label2;
     public int color = 0;
@@ -341,6 +341,11 @@ public class Line implements Shape {
         drawedPoint1.setY(drawedPoint1.getY() - delta.getY());
         drawedPoint2.setX(drawedPoint2.getX() - delta.getX());
         drawedPoint2.setY(drawedPoint2.getY() - delta.getY());
+    }
+
+    @Override
+    public String getLabel() {
+        return this.getLabel();
     }
 
     public void changePointCoordinates(Point point1, Point touchCoordinates) {

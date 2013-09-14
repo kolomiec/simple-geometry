@@ -12,7 +12,7 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 /**
  * Created by sayenko on 7/14/13.
  */
-public class Dot implements Shape {
+public class Dot extends BaseShape {
 
     private final Float radius = 5.0f;
     private final Point point;
@@ -80,6 +80,11 @@ public class Dot implements Shape {
     public void changeCoordinatesToDelta(Point delta) {
         point.setX(point.getX() - delta.getX());
         point.setY(point.getY() - delta.getY());
+    }
+
+    @Override
+    public String getLabel() {
+        return this.label;
     }
 
     @Override
