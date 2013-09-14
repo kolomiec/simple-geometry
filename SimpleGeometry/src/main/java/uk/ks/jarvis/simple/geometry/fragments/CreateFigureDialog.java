@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import uk.ks.jarvis.simple.geometry.CoordinatePlane.SystemInformation;
+import uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation;
 import uk.ks.jarvis.simple.geometry.R;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.holders.BaseHolder;

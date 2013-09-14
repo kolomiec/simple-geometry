@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 
-import uk.ks.jarvis.simple.geometry.CoordinatePlane.SystemInformation;
+import uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation;
 import uk.ks.jarvis.simple.geometry.R;
 
 

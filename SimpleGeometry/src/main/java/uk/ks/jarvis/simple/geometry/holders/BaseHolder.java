@@ -13,8 +13,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ks.jarvis.simple.geometry.CoordinatePlane.CoordinateSystem;
-import uk.ks.jarvis.simple.geometry.CoordinatePlane.SystemInformation;
+import uk.ks.jarvis.simple.geometry.coordinateplane.CoordinateSystem;
+import uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.fragments.CreateFigureDialog;
 import uk.ks.jarvis.simple.geometry.fragments.ShapeDialog;
