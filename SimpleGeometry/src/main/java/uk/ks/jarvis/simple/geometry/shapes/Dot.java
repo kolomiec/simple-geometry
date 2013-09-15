@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
+import static java.lang.Math.PI;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 
 
@@ -34,7 +35,9 @@ public class Dot implements Shape {
         paint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(point.getX(), point.getY(), radius, paint);
 
-        BaseHelper.drawTextWithShadow(canvas, label, point.getX() + radius, point.getY() + radius / 2);
+//        BaseHelper.drawTextWithShadow(canvas, label, point.getX() + radius, point.getY() + radius / 2);
+        BaseHelper.drawTextWithShadow(canvas, String.valueOf((PI/6)), point.getX() + radius, point.getY() + radius / 2);
+
     }
 
     @Override

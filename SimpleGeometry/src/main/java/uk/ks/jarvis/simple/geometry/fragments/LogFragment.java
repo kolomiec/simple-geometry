@@ -16,8 +16,9 @@ import uk.ks.jarvis.simple.geometry.R;
 public class LogFragment extends Fragment implements View.OnTouchListener {
 
     private View view;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.log, container, false);
         return view;
     }
