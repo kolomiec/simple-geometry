@@ -124,11 +124,6 @@ public class Circle extends BaseShape {
     }
 
     @Override
-    public String getLabel() {
-        return this.getLabel();
-    }
-
-    @Override
     public boolean isTouched(Point point) {
         radiusChangeMode = false;
         setPoint(lastTouchCoordinates, point);

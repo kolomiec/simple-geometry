@@ -16,4 +16,9 @@ public abstract class BaseShape implements Shape {
 
         return true;
     }
+
+    @Override
+    public String getLabel() {
+        return this.getLabel();
+    }
 }

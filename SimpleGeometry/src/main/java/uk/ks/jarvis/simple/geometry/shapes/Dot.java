@@ -83,11 +83,6 @@ public class Dot extends BaseShape {
     }
 
     @Override
-    public String getLabel() {
-        return this.label;
-    }
-
-    @Override
     public Point checkTouchWithOtherFigure(Circle circle) {
         return null;
     }

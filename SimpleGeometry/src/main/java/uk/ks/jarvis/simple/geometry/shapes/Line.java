@@ -343,11 +343,6 @@ public class Line extends BaseShape {
         drawedPoint2.setY(drawedPoint2.getY() - delta.getY());
     }
 
-    @Override
-    public String getLabel() {
-        return this.getLabel();
-    }
-
     public void changePointCoordinates(Point point1, Point touchCoordinates) {
         deltaTouchCoordinates.setX(lastTouchCoordinates.getX() - touchCoordinates.getX());
         deltaTouchCoordinates.setY(lastTouchCoordinates.getY() - touchCoordinates.getY());

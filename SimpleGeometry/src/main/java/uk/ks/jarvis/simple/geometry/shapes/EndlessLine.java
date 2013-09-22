@@ -296,11 +296,6 @@ public class EndlessLine extends Line {
     }
 
     @Override
-    public String getLabel() {
-        return this.label;
-    }
-
-    @Override
     public void refreshCoordinates() {
         setPoint(point1, drawedPoint1);
         setPoint(point2, drawedPoint2);
