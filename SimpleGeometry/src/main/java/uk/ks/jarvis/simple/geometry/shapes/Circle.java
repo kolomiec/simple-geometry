@@ -11,7 +11,7 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 /**
  * Created by sayenko on 7/26/13.
  */
-public class Circle implements Shape {
+public class Circle extends BaseShape {
 
     private final String label;
     public int color = 0;
@@ -32,7 +32,7 @@ public class Circle implements Shape {
     }
 
     public static Point getCoordinatesOfBorderOfCircle(Point point, Point point2, double radius) {
-        float radius2 = (float) BaseHelper.getLengthBetweenTwoPoints(point2, point);
+        float radius2 = (float) BaseHelper.getLength(point2, point);
 
         float ratioOfTheRadii = ((float) radius / radius2);
 
@@ -95,32 +95,19 @@ public class Circle implements Shape {
     }
 
     @Override
-    public Point setFigureThatItWillNotBeOutsideTheScreen(float maxX, float maxY) {
-        Point initialPoint = new Point(drawedCenterPoint);
-        Point changedPoint = new Point(drawedCenterPoint);
-        if (radius * 2 > maxX) {
-            radius = (maxX) / 2;
-        } else if (radius * 2 > maxY - 2) {
-            radius = (maxY) / 2;
-        }
-        if (drawedCenterPoint.getX() + radius > maxX) {
-            changedPoint.setX(maxX - (float) radius);
-        } else if (drawedCenterPoint.getX() - radius < 0) {
-            changedPoint.setX((float) radius);
-        }
-
-        if (drawedCenterPoint.getY() + radius > maxY) {
-            changedPoint.setY(maxY - (float) radius);
-        } else if (drawedCenterPoint.getY() - radius < 0) {
-            changedPoint.setY((float) radius);
-        }
-        return new Point(initialPoint.getX() - changedPoint.getX(), initialPoint.getY() - changedPoint.getY());
-    }
-
-    @Override
     public void changeCoordinatesToDelta(Point delta) {
         drawedCenterPoint.setX(drawedCenterPoint.getX() - delta.getX());
         drawedCenterPoint.setY(drawedCenterPoint.getY() - delta.getY());
+    }
+
+    @Override
+    public String getLabel() {
+        return this.getLabel();
+    }
+
+    @Override
+    public void zoom(Point centralZoomPoint, float zoomRatio) {
+
     }
 
     @Override
@@ -132,14 +119,14 @@ public class Circle implements Shape {
             radiusChangeMode = true;
             return true;
         } else {
-            double length = BaseHelper.getLengthBetweenTwoPoints(point, this.centerPoint);
+            double length = BaseHelper.getLength(point, this.centerPoint);
             return (length < radius);
         }
     }
 
     @Override
     public Point checkTouchWithOtherFigure(Circle circle) {
-        double length1 = BaseHelper.getLengthBetweenTwoPoints(this.getCoordinatesOfCenterPoint(), circle.getCoordinatesOfCenterPoint());
+        double length1 = BaseHelper.getLength(this.getCoordinatesOfCenterPoint(), circle.getCoordinatesOfCenterPoint());
         double length2 = this.getRadius() + circle.getRadius();
 
         if (((length1) < (length2 + 15)) && ((length1) > (length2 - 15))) {
@@ -154,7 +141,7 @@ public class Circle implements Shape {
     public Point checkTouchWithOtherFigure(Line line) {
 //        Point p = line.getNewCoordinates(this.getCoordinatesOfCenterPoint());
 //        if (line.isLineTouched(p)) {
-//            double length = BaseHelper.getLengthBetweenTwoPoints(p, this.getCoordinatesOfCenterPoint());
+//            double length = BaseHelper.getLength(p, this.getCoordinatesOfCenterPoint());
 //            if (((length) < (this.radius + 15)) && ((length) > (this.radius - 15))) {
 //                Point delta = new Point(this.getNewCoordinates(p));
 //                setPoint(delta, p.getX() - delta.getX(), p.getY() - delta.getY());
@@ -178,12 +165,12 @@ public class Circle implements Shape {
     }
 
     public boolean isBorderTouched(Point point, int deltaRadius) {
-        double length = BaseHelper.getLengthBetweenTwoPoints(point, this.centerPoint);
+        double length = BaseHelper.getLength(point, this.centerPoint);
         return (length < radius + deltaRadius) && (length > radius - deltaRadius);
     }
 
     public Point getNewCoordinates(Point point) {
-        double radius2 = BaseHelper.getLengthBetweenTwoPoints(this.centerPoint, point);
+        double radius2 = BaseHelper.getLength(this.centerPoint, point);
         Float ratioOfTheRadii = (float) (radius / radius2);
 
         Point dotCoordinates = new Point(0f, 0f);
@@ -194,6 +181,7 @@ public class Circle implements Shape {
     }
 
     public void changeRadius(Point point) {
-        radius = BaseHelper.getLengthBetweenTwoPoints(this.centerPoint, point);
+        radius = BaseHelper.getLength(this.centerPoint, point);
     }
+
 }

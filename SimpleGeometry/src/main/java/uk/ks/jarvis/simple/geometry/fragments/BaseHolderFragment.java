@@ -24,8 +24,7 @@ public class BaseHolderFragment extends Fragment {
     private View view, baseHolder;
     private Context context;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.base_holder, container, false);
         assert view != null;
         context = view.getContext();
@@ -53,7 +52,6 @@ public class BaseHolderFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.create_figure_item:
                 CreateFigureDialog createFigureDialog = new CreateFigureDialog((BaseHolder) baseHolder);

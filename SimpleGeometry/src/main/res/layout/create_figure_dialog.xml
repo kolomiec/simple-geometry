@@ -40,17 +40,17 @@
             android:textSize="30sp"
             android:layout_gravity="center"/>
 
-    <!--<TextView-->
-            <!--android:id="@+id/create_line"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="4dp"-->
-            <!--android:layout_marginLeft="4dp"-->
-            <!--android:layout_marginRight="4dp"-->
-            <!--android:layout_marginBottom="2dp"-->
-            <!--android:text="@string/endlessLine"-->
-            <!--android:textSize="30sp"-->
-            <!--android:layout_gravity="center"/>-->
+    <TextView
+            android:id="@+id/turn_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="2dp"
+            android:text="Turn shape"
+            android:textSize="30sp"
+            android:layout_gravity="center"/>
 
 
     <LinearLayout

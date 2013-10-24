@@ -28,8 +28,9 @@ public interface Shape {
 
     public void setColor(int color);
 
-    public Point setFigureThatItWillNotBeOutsideTheScreen(float maxX, float maxY);
-
     public void changeCoordinatesToDelta(Point delta);
 
+    public String getLabel();
+
+    public void zoom(Point centralZoomPoint, float zoomRatio);
 }

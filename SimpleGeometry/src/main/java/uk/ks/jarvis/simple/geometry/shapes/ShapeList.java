@@ -14,15 +14,10 @@ import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
  * Created by sayenko on 8/3/13.
  */
 public class ShapeList {
-    List<Shape> shapeList = new ArrayList<Shape>();
+    List<Shape> shapeList = new ArrayList<>();
     private int color = 0;
 
     public ShapeList() {
-        color = BaseHelper.getRandomColor();
-    }
-
-    public ShapeList(Shape shape) {
-        shapeList.add(shape);
         color = BaseHelper.getRandomColor();
     }
 
@@ -33,18 +28,38 @@ public class ShapeList {
             color = BaseHelper.getRandomColor();
     }
 
+    public Dot someDotTouched(Point point) {
+        boolean isDot = false;
+        int count = 0;
+        for (Shape shape : shapeList) {
+            if (shape.isTouched(point)) {
+                if (shapeList.get(count).getClass() == Dot.class) {
+                    isDot = true;
+                    break;
+                }
+            }
+            count++;
+        }
+        if (isDot) {
+            return ((Dot) shapeList.get(count));
+        } else return null;
+    }
+
+    public void zoom(Point centralPoint, double ratio) {
+        for (Shape shape : shapeList) {
+            shape.zoom(centralPoint, (float) ratio);
+        }
+    }
+
     public Point checkTouch(Shape shape1, Shape shape2) {
         if (((shape1.getClass()) == (Line.class)) && ((shape2.getClass()) == (Circle.class))) {
             return shape1.checkTouchWithOtherFigure((Circle) shape2);
 
-        } else if (((shape1.getClass()) == (Line.class)) && (((shape2.getClass()) == (Line.class)) || ((shape2.getClass()) == (EndlessLine.class)))) {
-            return shape1.checkTouchWithOtherFigure((Line) shape2);
+//        } else if (((shape1.getClass()) == (Circle.class)) && ((shape2.getClass()) == (Circle.class))) {
+//            return shape1.checkTouchWithOtherFigure((Circle) shape2);
 
-        } else if (((shape1.getClass()) == (Circle.class)) && ((shape2.getClass()) == (Circle.class))) {
-            return shape1.checkTouchWithOtherFigure((Circle) shape2);
-
-        } else if (((shape1.getClass()) == (Circle.class)) && (((shape2.getClass()) == (Line.class)) || ((shape2.getClass()) == (EndlessLine.class)))) {
-            return shape1.checkTouchWithOtherFigure((Line) shape2);
+//        } else if (((shape1.getClass()) == (Circle.class)) && (((shape2.getClass()) == (Line.class)) || ((shape2.getClass()) == (EndlessLine.class)))) {
+//            return shape1.checkTouchWithOtherFigure((Line) shape2);
         }
         return null;
     }
@@ -60,12 +75,10 @@ public class ShapeList {
     }
 
     public void move(Point point) {
-        boolean manyFigures = true;
-        if (shapeList.size() > 1) {
-            manyFigures = false;
-        }
+        boolean manyFigures = (shapeList.size() > 1);
         for (Shape shape : shapeList) {
-            shape.move(point, manyFigures);
+            if (shape.getClass() == Dot.class)
+                shape.move(point, manyFigures);
         }
     }
 
@@ -99,20 +112,6 @@ public class ShapeList {
             }
         }
         return false;
-    }
-
-    public void setFigureThatItWillNotBeOutsideTheScreen(float maxX, float maxY) {
-        for (Shape shape : this.shapeList) {
-            Point deltaPoint = shape.setFigureThatItWillNotBeOutsideTheScreen(maxX, maxY);
-            if (deltaPoint != null) {
-                for (Shape shape1 : this.shapeList) {
-                    if (shape1.getClass() == Line.class) {
-                        ((Line) shape1).numberTouchedPoint = 0;
-                    }
-                }
-                changeCoordinatesToDelta(deltaPoint);
-            }
-        }
     }
 
     public void changeCoordinatesToDelta(Point delta) {

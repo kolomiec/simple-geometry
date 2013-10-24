@@ -29,7 +29,7 @@ public class BaseHelper {
         return Color.argb(250, rand.nextInt(156) + 50, rand.nextInt(156) + 50, rand.nextInt(156) + 50);// тгьиук to constant
     }
 
-    public static double getLengthBetweenTwoPoints(Point point1, Point point2) {
+    public static double getLength(Point point1, Point point2) {
         return Math.sqrt(Math.pow(point1.getX() - point2.getX(), 2) + Math.pow(point1.getY() - point2.getY(), 2));
     }
 
@@ -47,4 +47,6 @@ public class BaseHelper {
         point1.setX(point2.getX());
         point1.setY(point2.getY());
     }
+
+
 }

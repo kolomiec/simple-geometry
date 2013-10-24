@@ -3,24 +3,27 @@ package uk.ks.jarvis.simple.geometry.shapes;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
-import static java.lang.Math.PI;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 
 
 /**
  * Created by sayenko on 7/14/13.
  */
-public class Dot implements Shape {
+public class Dot extends BaseShape {
 
     private final Float radius = 5.0f;
-    private final Point point;
     private final String label;
     public int color = 0;
     Point lastTouchCoordinates = new Point(0f, 0f);
     Point deltaTouchCoordinates = new Point(0f, 0f);
+    List<Shape> shapeList = new ArrayList<>();
+    private Point point;
     private Point delta = new Point(15f, 15f);
 
 
@@ -35,9 +38,7 @@ public class Dot implements Shape {
         paint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(point.getX(), point.getY(), radius, paint);
 
-//        BaseHelper.drawTextWithShadow(canvas, label, point.getX() + radius, point.getY() + radius / 2);
-        BaseHelper.drawTextWithShadow(canvas, String.valueOf((PI/6)), point.getX() + radius, point.getY() + radius / 2);
-
+        BaseHelper.drawTextWithShadow(canvas, label, point.getX() + radius, point.getY() + radius / 2);
     }
 
     @Override
@@ -53,6 +54,7 @@ public class Dot implements Shape {
     }
 
     public boolean isTouched(Point point) {
+        setPoint(lastTouchCoordinates, point);
         boolean betweenDelta = (this.point.getX() < (point.getX() + delta.getX())) && (this.point.getX() > (point.getX() - delta.getX()));
         if (betweenDelta) {
             boolean betweenDelta2 = (this.point.getY() < (point.getY() + delta.getY())) && (this.point.getY() > (point.getY() - delta.getY()));
@@ -75,14 +77,24 @@ public class Dot implements Shape {
     }
 
     @Override
-    public Point setFigureThatItWillNotBeOutsideTheScreen(float maxX, float maxY) {
-        return null;
-    }
-
-    @Override
     public void changeCoordinatesToDelta(Point delta) {
         point.setX(point.getX() - delta.getX());
         point.setY(point.getY() - delta.getY());
+    }
+
+    @Override
+    public String getLabel() {
+        return this.label;
+    }
+
+    @Override
+    public void zoom(Point centralZoomPoint, float zoomRatio) {
+        point.setX(((-centralZoomPoint.getX() + this.point.getX()) * zoomRatio) + centralZoomPoint.getX());
+        point.setY(((-centralZoomPoint.getY() + this.point.getY()) * zoomRatio) + centralZoomPoint.getY());
+    }
+
+    public Point getPoint() {
+        return this.point;
     }
 
     @Override
@@ -93,10 +105,6 @@ public class Dot implements Shape {
     @Override
     public Point checkTouchWithOtherFigure(Line line) {
         return null;
-    }
-
-    public Point getCoordinatesPoint() {
-        return point;
     }
 
     @Override
