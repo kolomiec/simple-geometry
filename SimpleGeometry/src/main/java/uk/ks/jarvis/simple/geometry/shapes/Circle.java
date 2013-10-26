@@ -12,16 +12,14 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
  * Created by sayenko on 7/26/13.
  */
 public class Circle extends BaseShape {
-
     private final String label;
-    public int color = 0;
-    Point lastTouchCoordinates = new Point(0f, 0f);
-    Point deltaTouchCoordinates = new Point(0f, 0f);
+    private int color = 0;
+    private Point lastTouchCoordinates = new Point(0f, 0f);
+    private Point deltaTouchCoordinates = new Point(0f, 0f);
     private Point centerPoint;
     private Point drawedCenterPoint = new Point(0f, 0f);
     private double radius;
     private boolean radiusChangeMode;
-
 
     public Circle(Float radius, Point point, String label) {
         this.radius = radius;
@@ -32,9 +30,9 @@ public class Circle extends BaseShape {
     }
 
     public static Point getCoordinatesOfBorderOfCircle(Point point, Point point2, double radius) {
-        float radius2 = (float) BaseHelper.getLength(point2, point);
+        double radius2 = BaseHelper.getLength(point2, point);
 
-        float ratioOfTheRadii = ((float) radius / radius2);
+        float ratioOfTheRadii = (float) (radius / radius2);
 
         Point dotCoordinates = new Point(0f, 0f);
         dotCoordinates.setX(((point.getX() - point2.getX()) * ratioOfTheRadii) + point2.getX());
@@ -106,7 +104,12 @@ public class Circle extends BaseShape {
     }
 
     @Override
-    public void zoom(Point centralZoomPoint, float zoomRatio) {
+    public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta) {
+
+    }
+
+    @Override
+    public void turn(Point centralTurnPoint, float angle) {
 
     }
 

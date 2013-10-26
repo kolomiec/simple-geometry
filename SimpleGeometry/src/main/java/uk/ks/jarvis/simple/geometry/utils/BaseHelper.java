@@ -8,6 +8,8 @@ import java.util.Random;
 
 import uk.ks.jarvis.simple.geometry.beans.Point;
 
+import static java.lang.Math.abs;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,5 +50,20 @@ public class BaseHelper {
         point1.setY(point2.getY());
     }
 
+    public static float getAngleFrom2Points(Point p1, Point p2) {
+        Point coord = new Point(abs(p2.getX() - p1.getX()), abs(p2.getY() - p1.getY()));
+        float angle = (90 / (coord.getX() + coord.getY())) * coord.getY();
 
+        if ((p2.getY() > p1.getY()) && (p2.getX() > p1.getX())) { // if 1 coordinate plane
+
+        } else if ((p2.getY() > p1.getY()) && (p2.getX() < p1.getX())) { // if 2 coordinate plane
+            angle = (180 - angle);
+        } else if ((p2.getY() < p1.getY()) && (p2.getX() < p1.getX())) { // if 3 coordinate plane
+            angle = (180 + angle);
+        } else if ((p2.getY() <= p1.getY()) && (p2.getX() >= p1.getX())) { // if 4 coordinate plane
+            angle = (360 - angle);
+        }
+        angle = 360 - (angle % 360);
+        return angle;
+    }
 }

@@ -109,7 +109,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                     }
                     zoom.zoom(firstPointerCoordinates, secondPointerCoordinates);
                     for (ShapeList s : shapes) {
-                        s.zoom(zoom.getZoomPoint(), zoom.getZoomRatio());
+                        s.zoom(zoom.getZoomPoint(), zoom.getZoomRatio(),zoom.getMoveDelta());
                     }
                     if (isLongClick) {
                         isLongClick = false;

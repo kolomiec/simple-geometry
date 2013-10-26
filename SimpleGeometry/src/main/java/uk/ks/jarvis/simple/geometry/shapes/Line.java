@@ -11,6 +11,7 @@ import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import static java.lang.Math.tan;
+import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 
@@ -19,13 +20,13 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
  */
 
 public class Line extends BaseShape {
-    public static final int NUMBER_OF_FIRST_POINT = 1;
-    public static final int NUMBER_OF_SECOND_POINT = 2;
+    private static final int NUMBER_OF_FIRST_POINT = 1;
+    private static final int NUMBER_OF_SECOND_POINT = 2;
     private final String label;
-    public int color = 0;
-    public int numberTouchedPoint = 0;
-    public Float angle;
-    Point lastTouchCoordinates = new Point(0f, 0f);
+    private int color = 0;
+    private int numberTouchedPoint = 0;
+    private Float angle;
+    private Point lastTouchCoordinates = new Point(0f, 0f);
     private Point point;
     private Point deltaTouchCoordinates = new Point(0f, 0f);
 
@@ -105,6 +106,7 @@ public class Line extends BaseShape {
 
     public void setAngle(Point point) {
         angle = bringToAngles(getAngleFrom2Points(this.point, point));
+        if (numberTouchedPoint == NUMBER_OF_SECOND_POINT) angle = (angle + 180) % 360;
     }
 
     private float bringToAngles(float angle) {
@@ -114,24 +116,6 @@ public class Line extends BaseShape {
             if (abs(angle - angleOfAttraction) < delta) angle = angleOfAttraction;
             angleOfAttraction += 45;
         } while (angleOfAttraction < 360);
-        return angle;
-    }
-
-    private float getAngleFrom2Points(Point p1, Point p2) {
-        Point coord = new Point(abs(p2.getX() - p1.getX()), abs(p2.getY() - p1.getY()));
-        float angle = (90 / (coord.getX() + coord.getY())) * coord.getY();
-
-        if ((p2.getY() > p1.getY()) && (p2.getX() > p1.getX())) { // if 1 coordinate plane
-
-        } else if ((p2.getY() > p1.getY()) && (p2.getX() < p1.getX())) { // if 2 coordinate plane
-            angle = (180 - angle);
-        } else if ((p2.getY() < p1.getY()) && (p2.getX() < p1.getX())) { // if 3 coordinate plane
-            angle = (180 + angle);
-        } else if ((p2.getY() <= p1.getY()) && (p2.getX() >= p1.getX())) { // if 4 coordinate plane
-            angle = (360 - angle);
-        }
-        angle = 360 - (angle % 360);
-        if (numberTouchedPoint == NUMBER_OF_SECOND_POINT) angle = (angle + 180) % 360;
         return angle;
     }
 
@@ -197,6 +181,7 @@ public class Line extends BaseShape {
 
     @Override
     public void changeCoordinatesToDelta(Point delta) {
+
     }
 
     @Override
@@ -205,9 +190,13 @@ public class Line extends BaseShape {
     }
 
     @Override
-    public void zoom(Point centralZoomPoint, float zoomRatio) {
-        point.setX(((-centralZoomPoint.getX() + this.point.getX()) * zoomRatio) + centralZoomPoint.getX());
-        point.setY(((-centralZoomPoint.getY() + this.point.getY()) * zoomRatio) + centralZoomPoint.getY());
+    public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta) {
+
+    }
+
+    @Override
+    public void turn(Point centralTurnPoint, float angle) {
+
     }
 
     public void changePointCoordinates(Point touchCoordinates) {

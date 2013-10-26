@@ -16,13 +16,12 @@ import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
  * Created by sayenko on 7/14/13.
  */
 public class Dot extends BaseShape {
-
     private final Float radius = 5.0f;
     private final String label;
-    public int color = 0;
-    Point lastTouchCoordinates = new Point(0f, 0f);
-    Point deltaTouchCoordinates = new Point(0f, 0f);
-    List<Shape> shapeList = new ArrayList<>();
+    private int color = 0;
+    private Point lastTouchCoordinates = new Point(0f, 0f);
+    private Point deltaTouchCoordinates = new Point(0f, 0f);
+    private List<Shape> shapeList = new ArrayList<>();
     private Point point;
     private Point delta = new Point(15f, 15f);
 
@@ -88,9 +87,16 @@ public class Dot extends BaseShape {
     }
 
     @Override
-    public void zoom(Point centralZoomPoint, float zoomRatio) {
+    public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta) {
         point.setX(((-centralZoomPoint.getX() + this.point.getX()) * zoomRatio) + centralZoomPoint.getX());
         point.setY(((-centralZoomPoint.getY() + this.point.getY()) * zoomRatio) + centralZoomPoint.getY());
+        point.setX(point.getX() + moveDelta.getX());
+        point.setY(point.getY() + moveDelta.getY());
+    }
+
+    @Override
+    public void turn(Point centralTurnPoint, float angle) {
+
     }
 
     public Point getPoint() {

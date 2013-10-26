@@ -32,5 +32,7 @@ public interface Shape {
 
     public String getLabel();
 
-    public void zoom(Point centralZoomPoint, float zoomRatio);
+    public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta);
+
+    public void turn(Point centralTurnPoint, float angle);
 }

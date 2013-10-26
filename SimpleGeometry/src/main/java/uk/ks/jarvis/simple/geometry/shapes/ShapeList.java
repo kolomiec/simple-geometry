@@ -45,9 +45,9 @@ public class ShapeList {
         } else return null;
     }
 
-    public void zoom(Point centralPoint, double ratio) {
+    public void zoom(Point centralPoint, double ratio, Point moveDelta) {
         for (Shape shape : shapeList) {
-            shape.zoom(centralPoint, (float) ratio);
+            shape.zoom(centralPoint, (float) ratio, moveDelta);
         }
     }
 
