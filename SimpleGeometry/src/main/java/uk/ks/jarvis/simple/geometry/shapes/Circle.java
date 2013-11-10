@@ -32,7 +32,7 @@ public class Circle extends BaseShape {
     public static Point getCoordinatesOfBorderOfCircle(Point point, Point point2, double radius) {
         double radius2 = BaseHelper.getLength(point2, point);
 
-        float ratioOfTheRadii = (float) (radius / radius2);
+        double ratioOfTheRadii =(radius / radius2);
 
         Point dotCoordinates = new Point(0f, 0f);
         dotCoordinates.setX(((point.getX() - point2.getX()) * ratioOfTheRadii) + point2.getX());
@@ -50,12 +50,12 @@ public class Circle extends BaseShape {
     public void draw(Canvas canvas, Paint paint) {
         paint.setStyle(Paint.Style.STROKE);
 
-        canvas.drawCircle(drawedCenterPoint.getX(), drawedCenterPoint.getY(), (float) radius, paint);
+        canvas.drawCircle((float) drawedCenterPoint.getX(), (float) drawedCenterPoint.getY(), (float) radius, paint);
 
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(drawedCenterPoint.getX(), drawedCenterPoint.getY(), 2, paint);
+        canvas.drawCircle((float) drawedCenterPoint.getX(), (float) drawedCenterPoint.getY(), 2, paint);
 
-        BaseHelper.drawTextWithShadow(canvas, label, drawedCenterPoint.getX() + 4, drawedCenterPoint.getY());
+        BaseHelper.drawTextWithShadow(canvas, label, (float) drawedCenterPoint.getX() + 4, (float) drawedCenterPoint.getY());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class Circle extends BaseShape {
     }
 
     @Override
-    public void turn(Point centralTurnPoint, float angle) {
+    public void turn(Point centralTurnPoint, double angle) {
 
     }
 
@@ -162,11 +162,6 @@ public class Circle extends BaseShape {
         return null;
     }
 
-    @Override
-    public void refreshCoordinates() {
-        setPoint(centerPoint, drawedCenterPoint);
-    }
-
     public boolean isBorderTouched(Point point, int deltaRadius) {
         double length = BaseHelper.getLength(point, this.centerPoint);
         return (length < radius + deltaRadius) && (length > radius - deltaRadius);
@@ -174,7 +169,7 @@ public class Circle extends BaseShape {
 
     public Point getNewCoordinates(Point point) {
         double radius2 = BaseHelper.getLength(this.centerPoint, point);
-        Float ratioOfTheRadii = (float) (radius / radius2);
+        double ratioOfTheRadii = (radius / radius2);
 
         Point dotCoordinates = new Point(0f, 0f);
         dotCoordinates.setX(((point.getX() - this.centerPoint.getX()) * ratioOfTheRadii) + this.centerPoint.getX());

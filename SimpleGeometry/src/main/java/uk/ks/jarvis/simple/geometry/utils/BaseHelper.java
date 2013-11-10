@@ -9,6 +9,7 @@ import java.util.Random;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 
 import static java.lang.Math.abs;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.arctg;
 
 
 /**
@@ -40,7 +41,7 @@ public class BaseHelper {
         canvas.drawText(label, x, y, BaseHelper.getLabelPaint(ColorTheme.LIGHT_COLOR));
     }
 
-    public static void setPoint(Point point, float x, float y) {
+    public static void setPoint(Point point, double x, double y) {
         point.setX(x);
         point.setY(y);
     }
@@ -50,20 +51,21 @@ public class BaseHelper {
         point1.setY(point2.getY());
     }
 
-    public static float getAngleFrom2Points(Point p1, Point p2) {
-        Point coord = new Point(abs(p2.getX() - p1.getX()), abs(p2.getY() - p1.getY()));
-        float angle = (90 / (coord.getX() + coord.getY())) * coord.getY();
+    public static float getAngleFrom2Points(Point firstPoint, Point secondPoint) {
+        Point coord = new Point(abs(secondPoint.getX() - firstPoint.getX()), abs(secondPoint.getY() - firstPoint.getY()));
+        double tgOfAngle = coord.getY()/coord.getX();
+        double angle = arctg(tgOfAngle);
 
-        if ((p2.getY() > p1.getY()) && (p2.getX() > p1.getX())) { // if 1 coordinate plane
+        if ((secondPoint.getY() > firstPoint.getY()) && (secondPoint.getX() > firstPoint.getX())) { // if 1 coordinate plane
 
-        } else if ((p2.getY() > p1.getY()) && (p2.getX() < p1.getX())) { // if 2 coordinate plane
+        } else if ((secondPoint.getY() > firstPoint.getY()) && (secondPoint.getX() < firstPoint.getX())) { // if 2 coordinate plane
             angle = (180 - angle);
-        } else if ((p2.getY() < p1.getY()) && (p2.getX() < p1.getX())) { // if 3 coordinate plane
+        } else if ((secondPoint.getY() < firstPoint.getY()) && (secondPoint.getX() < firstPoint.getX())) { // if 3 coordinate plane
             angle = (180 + angle);
-        } else if ((p2.getY() <= p1.getY()) && (p2.getX() >= p1.getX())) { // if 4 coordinate plane
+        } else if ((secondPoint.getY() <= firstPoint.getY()) && (secondPoint.getX() >= firstPoint.getX())) { // if 4 coordinate plane
             angle = (360 - angle);
         }
         angle = 360 - (angle % 360);
-        return angle;
+        return (float) angle;
     }
 }

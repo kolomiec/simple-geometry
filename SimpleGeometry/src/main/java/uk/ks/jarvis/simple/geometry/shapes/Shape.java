@@ -11,6 +11,8 @@ import uk.ks.jarvis.simple.geometry.beans.Point;
  */
 
 public interface Shape {
+    public boolean ONLY_CHANGE = false;
+    public boolean ONLY_MOVE = true;
 
     public void draw(Canvas c, Paint p);
 
@@ -22,8 +24,6 @@ public interface Shape {
 
     public Point checkTouchWithOtherFigure(Line line);
 
-    public void refreshCoordinates();
-
     public int getColor();
 
     public void setColor(int color);
@@ -34,5 +34,5 @@ public interface Shape {
 
     public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta);
 
-    public void turn(Point centralTurnPoint, float angle);
+    public void turn(Point centralTurnPoint, double angle);
 }

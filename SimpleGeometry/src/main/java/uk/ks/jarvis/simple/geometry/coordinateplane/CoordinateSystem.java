@@ -24,6 +24,7 @@ public class CoordinateSystem {
     private Point originPoint = new Point(startPointXAxis);
     private Paint paint;
 
+
     public CoordinateSystem() {
         paint = new Paint();
         paint.setColor(ColorTheme.LIGHT_COLOR);
@@ -37,12 +38,12 @@ public class CoordinateSystem {
     private void drawYAxis(Canvas canvas) {
         paint.setColor(Color.GRAY);
         paint.setStrokeWidth(lineWidth);
-        canvas.drawLine(startPointYAxis.getX(), startPointYAxis.getY(), endPointYAxis.getX(), endPointYAxis.getY(), paint);
+        canvas.drawLine((float) startPointYAxis.getX(), (float) startPointYAxis.getY(), (float) endPointYAxis.getX(), (float) endPointYAxis.getY(), paint);
         drawLabelOnYAxis(canvas);
     }
 
     private void drawLabelOnYAxis(Canvas canvas) {
-        int labelsCount = Math.round((startPointYAxis.getY()) / labelStep);
+        int labelsCount = (int) Math.round((startPointYAxis.getY()) / labelStep);
         SystemInformation.COUNT_LABEL_BY_Y_AXIS = labelsCount;
         int magicNumber = 5; // :) ToDo Rename
         Point cursorPos = new Point(startPointYAxis.getX(), startPointXAxis.getY() - labelStep);
@@ -50,9 +51,9 @@ public class CoordinateSystem {
         paint.setTextSize(textWidth);
         for (int i = 0; i < labelsCount - 1; i++) {
             paint.setColor(Color.GRAY);
-            canvas.drawLine(cursorPos.getX() - labelHeight, cursorPos.getY(), cursorPos.getX() + labelHeight, cursorPos.getY(), paint);
+            canvas.drawLine((float) cursorPos.getX() - labelHeight, (float) cursorPos.getY(), (float) cursorPos.getX() + labelHeight, (float) cursorPos.getY(), paint);
             paint.setColor(ColorTheme.LIGHT_COLOR);
-            canvas.drawText(getString(i + 1), cursorPos.getX() - labelHeight - textWidth, cursorPos.getY() + magicNumber, paint);
+            canvas.drawText(getString(i + 1), (float) cursorPos.getX() - labelHeight - textWidth, (float) cursorPos.getY() + magicNumber, paint);
             cursorPos.setY(cursorPos.getY() - labelStep);
         }
     }
@@ -60,12 +61,12 @@ public class CoordinateSystem {
     private void drawXAxis(Canvas canvas) {
         paint.setColor(Color.GRAY);
         paint.setStrokeWidth(lineWidth);
-        canvas.drawLine(startPointXAxis.getX(), startPointXAxis.getY(), endPointXAxis.getX(), endPointXAxis.getY(), paint);
+        canvas.drawLine((float) startPointXAxis.getX(), (float) startPointXAxis.getY(), (float) endPointXAxis.getX(), (float) endPointXAxis.getY(), paint);
         drawLabelOnXAxis(canvas);
     }
 
     private void drawLabelOnXAxis(Canvas canvas) {
-        int labelsCount = Math.round((SystemInformation.DISPLAY_WIDTH - startPointXAxis.getX()) / labelStep);
+        int labelsCount = (int) Math.round((SystemInformation.DISPLAY_WIDTH - startPointXAxis.getX()) / labelStep);
         SystemInformation.COUNT_LABEL_BY_X_AXIS = labelsCount;
         int magicNumber = 7; // :) ToDo Rename
         Point cursorPos = new Point(startPointXAxis.getX() + labelStep, startPointXAxis.getY());
@@ -73,9 +74,9 @@ public class CoordinateSystem {
         paint.setTextSize(textWidth);
         for (int i = 0; i < labelsCount - 1; i++) {
             paint.setColor(Color.GRAY);
-            canvas.drawLine(cursorPos.getX(), cursorPos.getY() - labelHeight, cursorPos.getX(), cursorPos.getY() + labelHeight, paint);
+            canvas.drawLine((float) cursorPos.getX(), (float) cursorPos.getY() - labelHeight, (float) cursorPos.getX(), (float) cursorPos.getY() + labelHeight, paint);
             paint.setColor(ColorTheme.LIGHT_COLOR);
-            canvas.drawText(getString(i + 1), cursorPos.getX() - magicNumber, cursorPos.getY() + labelHeight + textWidth, paint);
+            canvas.drawText(getString(i + 1), (float) cursorPos.getX() - magicNumber, (float) cursorPos.getY() + labelHeight + textWidth, paint);
             cursorPos.setX(cursorPos.getX() + labelStep);
         }
     }

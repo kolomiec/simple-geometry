@@ -2,13 +2,11 @@ package uk.ks.jarvis.simple.geometry.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 
 import uk.ks.jarvis.simple.geometry.R;
-import uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation;
 
 
 public class MainActivity extends FragmentActivity implements View.OnTouchListener, View.OnLongClickListener {
@@ -34,11 +32,5 @@ public class MainActivity extends FragmentActivity implements View.OnTouchListen
     @Override
     public boolean onLongClick(View v) {
         return true;
-    }
-
-    private void setSystemInformation() {
-        DisplayMetrics displayMetrics = getBaseContext().getResources().getDisplayMetrics();
-        SystemInformation.DISPLAY_WIDTH = displayMetrics.widthPixels;
-        SystemInformation.DISPLAY_HEIGHT = displayMetrics.heightPixels;
     }
 }

@@ -5,10 +5,10 @@ package uk.ks.jarvis.simple.geometry.beans;
  */
 public class Point {
 
-    private Float x;
-    private Float y;
+    private double x;
+    private double y;
 
-    public Point(Float x, Float y) {
+    public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -18,19 +18,24 @@ public class Point {
         this.y = point.getY();
     }
 
-    public Float getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(Float x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public Float getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(Float y) {
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setXY(double x,double y) {
+        this.x = x;
         this.y = y;
     }
 
@@ -41,7 +46,7 @@ public class Point {
         }
         Point that = (Point) obj;
 
-        return this.getX().equals(that.getX()) && this.getY().equals(that.getY());
+        return this.getX()==that.getX() && this.getY()==that.getY();
     }
 
     public boolean nearlyEquals(Point point) {

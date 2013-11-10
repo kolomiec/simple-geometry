@@ -16,6 +16,8 @@ import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 public class ShapeList {
     List<Shape> shapeList = new ArrayList<>();
     private int color = 0;
+    boolean ONLY_CHANGE = false;
+    boolean ONLY_MOVE = true;
 
     public ShapeList() {
         color = BaseHelper.getRandomColor();
@@ -120,9 +122,9 @@ public class ShapeList {
         }
     }
 
-    public void refreshCoordinates() {
-        for (Shape shape : shapeList) {
-            shape.refreshCoordinates();
+    public void turn(Point centralTurnPoint, double angle) {
+        for (Shape shape1 : this.shapeList) {
+            shape1.turn(centralTurnPoint,(float) angle);
         }
     }
 

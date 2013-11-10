@@ -9,7 +9,11 @@ import java.util.List;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
+import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
+import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.cos;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.sin;
 
 
 /**
@@ -35,9 +39,9 @@ public class Dot extends BaseShape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(point.getX(), point.getY(), radius, paint);
+        canvas.drawCircle((float) point.getX(), (float) point.getY(), radius, paint);
 
-        BaseHelper.drawTextWithShadow(canvas, label, point.getX() + radius, point.getY() + radius / 2);
+        BaseHelper.drawTextWithShadow(canvas, label, (float) point.getX() + radius, (float) point.getY() + radius / 2);
     }
 
     @Override
@@ -95,8 +99,11 @@ public class Dot extends BaseShape {
     }
 
     @Override
-    public void turn(Point centralTurnPoint, float angle) {
-
+    public void turn(Point centralTurnPoint, double deltaAngle) {
+        double angle = (getAngleFrom2Points(centralTurnPoint, point) + deltaAngle + 360) % 360;
+        double hypotenuse = getLength(point, centralTurnPoint);
+        point.setX(hypotenuse * cos(angle) + centralTurnPoint.getX());
+        point.setY(-hypotenuse * sin(angle) + centralTurnPoint.getY());
     }
 
     public Point getPoint() {
@@ -111,10 +118,5 @@ public class Dot extends BaseShape {
     @Override
     public Point checkTouchWithOtherFigure(Line line) {
         return null;
-    }
-
-    @Override
-    public void refreshCoordinates() {
-
     }
 }

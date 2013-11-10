@@ -95,7 +95,7 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         if (view.getId() == btnDelete.getId()) {
-            baseHolder.removeFirstShape();
+            baseHolder.removeShape(0);
             baseHolder.invalidate();
             this.dismiss();
         } else if (view.getId() == btnColor.getId()) {

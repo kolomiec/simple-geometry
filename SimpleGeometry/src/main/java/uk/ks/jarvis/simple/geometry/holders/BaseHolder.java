@@ -16,7 +16,6 @@ import java.util.List;
 
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.coordinateplane.CoordinateSystem;
-import uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation;
 import uk.ks.jarvis.simple.geometry.fragments.CreateFigureDialog;
 import uk.ks.jarvis.simple.geometry.fragments.ShapeDialog;
 import uk.ks.jarvis.simple.geometry.shapes.Dot;
@@ -26,22 +25,24 @@ import uk.ks.jarvis.simple.geometry.shapes.ShapeList;
 import uk.ks.jarvis.simple.geometry.utils.ColorTheme;
 import uk.ks.jarvis.simple.geometry.utils.Zoom;
 
+import static uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation.initSystemInformation;
+
 /**
  * Created by sayenko on 7/14/13.
  */
 public class BaseHolder extends View implements View.OnTouchListener, View.OnLongClickListener {
 
     private final Context context;
-    Zoom zoom = new Zoom();
+    private Zoom zoom = new Zoom();
     private Point firstPointerCoordinates = new Point(0f, 0f);
     private Point secondPointerCoordinates = new Point(0f, 0f);
     private Point downCoordinates = new Point(0f, 0f);
     private boolean thereAreTouchedFigures = false;
     private boolean isTouchedShape;
     private FragmentActivity activity;
-    private List<ShapeList> shapes = new ArrayList<ShapeList>();
+    private List<ShapeList> shapes = new ArrayList<>();
     private Paint paint = new Paint();
-    private int FIRST_SHAPE_IN_LIST = 0;
+    private int NUMBER_OF_FIRST_SHAPE = 0;
     private boolean isLongClick;
     private boolean createFigureMode;
     private Shape createShape;
@@ -83,12 +84,9 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         switch (motionEvent.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
-                downCoordinates.setX(motionEvent.getX());
-                downCoordinates.setY(motionEvent.getY());
+                downCoordinates.setXY(motionEvent.getX(), motionEvent.getY());
 
-                firstPointerCoordinates.setX(motionEvent.getX());
-                firstPointerCoordinates.setY(motionEvent.getY());
-
+                firstPointerCoordinates.setXY(motionEvent.getX(), motionEvent.getY());
                 if (createFigureMode) {
                     CreateNewFigureInCreateFigureMode(motionEvent);
                 }
@@ -98,47 +96,41 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
 
                 break;
             case MotionEvent.ACTION_MOVE:
-                firstPointerCoordinates.setX(motionEvent.getX());
-                firstPointerCoordinates.setY(motionEvent.getY());
-                if (pointerCount > 1) {
-                    secondPointerCoordinates.setX(motionEvent.getX(1));
-                    secondPointerCoordinates.setY(motionEvent.getY(1));
+                firstPointerCoordinates.setXY(motionEvent.getX(), motionEvent.getY());
+                if (createFigureMode) {
+                    createShape.move(firstPointerCoordinates, Shape.ONLY_CHANGE);
+                } else if (pointerCount > 1) {
+                    secondPointerCoordinates.setXY(motionEvent.getX(1), motionEvent.getY(1));
                     if (!scaleMode) {
                         zoom.initZoom(firstPointerCoordinates, secondPointerCoordinates);
                         scaleMode = true;
                     }
                     zoom.zoom(firstPointerCoordinates, secondPointerCoordinates);
                     for (ShapeList s : shapes) {
-                        s.zoom(zoom.getZoomPoint(), zoom.getZoomRatio(),zoom.getMoveDelta());
+                        s.zoom(zoom.getZoomPoint(), zoom.getZoomRatio(), zoom.getMoveDelta());
+                        s.turn(zoom.getZoomPoint(), zoom.getAngleDelta());
                     }
                     if (isLongClick) {
                         isLongClick = false;
                     }
                 } else if (!scaleMode) {
-                    if ((!downCoordinates.nearlyEquals(firstPointerCoordinates)) && isLongClick) {
-                        isLongClick = false;
-                    }
-
-                    if (isTouchedShape) {
-                        shapes.get(FIRST_SHAPE_IN_LIST).move(firstPointerCoordinates);
+                    if (shapes.size() != 0) {
+                        shapes.get(NUMBER_OF_FIRST_SHAPE).move(firstPointerCoordinates);
                         getFigureTouchedWithFirstFigure();
                     }
+                }
+                if ((!downCoordinates.nearlyEquals(firstPointerCoordinates)) && isLongClick) {
+                    isLongClick = false;
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (scaleMode) {
                     scaleMode = false;
                 }
-                for (ShapeList s : shapes) {
-                    s.refreshCoordinates();
+                if (createFigureMode) {
+                    createFigureMode = false;
                 }
-//                ShapeList figureTouchedWithFirstFigure = getFigureTouchedWithFirstFigure();
-//                if (figureTouchedWithFirstFigure != null) {
-//                    mergeShapeLists(shapes.get(FIRST_SHAPE_IN_LIST), figureTouchedWithFirstFigure);
-//                    thereAreTouchedFigures = false;
-//                }
                 break;
-
             default:
                 break;
         }
@@ -162,10 +154,10 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
             listOfShapes.getShapeArray().add(createShape);
             addShape(listOfShapes);
         } else {
-            shapes.get(FIRST_SHAPE_IN_LIST).getShapeArray().add(createShape);
+            shapes.get(NUMBER_OF_FIRST_SHAPE).getShapeArray().add(NUMBER_OF_FIRST_SHAPE, createShape);
         }
         isTouchedShape = true;
-        createFigureMode = false;
+//        createFigureMode = false;
     }
 
     private ShapeList getFigureTouchedWithFirstFigure() {
@@ -174,7 +166,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         if (shapes.size() > 1) {
             for (ShapeList s : shapes) {
                 if (count != 0) {
-                    boolean touchFigures = shapes.get(FIRST_SHAPE_IN_LIST).checkTouchWithOtherFigure(s);
+                    boolean touchFigures = shapes.get(NUMBER_OF_FIRST_SHAPE).checkTouchWithOtherFigure(s);
                     if (touchFigures) {
                         shapeList = s;
                     }
@@ -187,19 +179,17 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
 
     private void moveTouchedFigureToFirstPosition() {
         isTouchedShape = false;
-        int touchedShapePosition = 0;
         for (ShapeList s : shapes) {
             if (s.isTouched(firstPointerCoordinates)) {
                 isTouchedShape = true;
-                shapes.set(touchedShapePosition, shapes.set(FIRST_SHAPE_IN_LIST, shapes.get(touchedShapePosition)));
+                shapes.set(shapes.indexOf(s), shapes.set(NUMBER_OF_FIRST_SHAPE, s));
                 break;
             }
-            touchedShapePosition++;
         }
     }
 
     public void addShape(ShapeList shapeList) {
-        shapes.add(FIRST_SHAPE_IN_LIST, shapeList);
+        shapes.add(NUMBER_OF_FIRST_SHAPE, shapeList);
     }
 
     public void unMergeAllFigures(ShapeList shapeList) {
@@ -223,21 +213,16 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
             (shapeList2).getShapeArray().add(shape);
         }
         Toast.makeText(context, "Figures were merged.", Toast.LENGTH_SHORT).show();
-        removeFirstShape();
+        removeShape(NUMBER_OF_FIRST_SHAPE);
     }
 
-    public void removeFirstShape() {
+    public void removeShape(int numberOfShapeToRemove) {
         if (shapes.size() != 0) {
-            shapes.remove(FIRST_SHAPE_IN_LIST);
+            shapes.remove(numberOfShapeToRemove);
             if (shapes.size() == 0) {
                 Toast.makeText(context, "There are no figures anymore...", Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    private void setSystemInformation() {
-        SystemInformation.DISPLAY_HEIGHT = this.getHeight();
-        SystemInformation.DISPLAY_WIDTH = this.getWidth();
     }
 
     private void refresh(Canvas canvas, Paint p) {
@@ -248,19 +233,19 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
             ColorTheme.setLightTheme();
         }
         if (!coordinateSystemCreated) {
-            setSystemInformation();
+            initSystemInformation(this);
             coordinateSystem = new CoordinateSystem();
             coordinateSystemCreated = true;
         }
         canvas.drawColor(ColorTheme.DARK_COLOR);
 
         if (pointerCount > 0) {
-            paint.setColor(Color.BLUE);
-            canvas.drawCircle(firstPointerCoordinates.getX(), firstPointerCoordinates.getY(), 40, paint);
+            paint.setColor(Color.argb(50, 0, 0, 250));
+            canvas.drawCircle((float) firstPointerCoordinates.getX(), (float) firstPointerCoordinates.getY(), 40, paint);
 
             if (pointerCount > 1) {
-                paint.setColor(Color.RED);
-                canvas.drawCircle(secondPointerCoordinates.getX(), secondPointerCoordinates.getY(), 40, paint);
+                paint.setColor(Color.argb(50, 250, 0, 0));
+                canvas.drawCircle((float) secondPointerCoordinates.getX(), (float) secondPointerCoordinates.getY(), 40, paint);
             }
         }
 
@@ -272,7 +257,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         canvas.drawText(pointerCount + " pointers, " + zoom.toString(), 30, 10, p);
 
         if (shapes.size() > 0) {
-            canvas.drawText(shapes.get(FIRST_SHAPE_IN_LIST).toString(), 30, 25, p);
+            canvas.drawText(shapes.get(NUMBER_OF_FIRST_SHAPE).toString(), 30, 25, p);
         }
 
         if (sharedPrefs.getBoolean("checkBox", false)) {
@@ -284,12 +269,12 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     public boolean onLongClick(View view) {
         if (isLongClick) {
             if (isClickOnShape()) {
-                Dot someDot = shapes.get(FIRST_SHAPE_IN_LIST).someDotTouched(firstPointerCoordinates);
+                Dot someDot = shapes.get(NUMBER_OF_FIRST_SHAPE).someDotTouched(firstPointerCoordinates);
                 if (someDot != null) {
                     CreateFigureDialog c = new CreateFigureDialog(this, someDot.getPoint());
                     c.show(activity.getSupportFragmentManager(), "");
                 } else {
-                    ShapeDialog c = new ShapeDialog(this, shapes.get(FIRST_SHAPE_IN_LIST), getClickedShapeFromShapeList());
+                    ShapeDialog c = new ShapeDialog(this, shapes.get(NUMBER_OF_FIRST_SHAPE), getClickedShapeFromShapeList());
                     c.show(activity.getSupportFragmentManager(), "");
                 }
             } else if (shapes.size() == 0) {
