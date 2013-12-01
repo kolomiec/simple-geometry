@@ -82,7 +82,7 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
         btnCancel = (Button) view.findViewById(R.id.cancelButton);
         btnCancel.setOnClickListener(this);
 
-        if (shapeListWhichContainsTouchedShape.getShapeArray().size() == 1) {
+        if (ShapeList.getShapeArray().size() == 1) {
             title = "Properties of the " + title;
         } else {
             title = "Properties of the figure";
@@ -106,7 +106,7 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
             this.dismiss();
         } else if (touchedShape.getClass() == Dot.class) {
             if (view.getId() == createFigure.getId()) {
-                CreateFigureDialog createFigureDialog = new CreateFigureDialog(baseHolder, ((Dot) touchedShape).getPoint());
+                CreateFigureDialog createFigureDialog = new CreateFigureDialog(baseHolder, (Dot) touchedShape);
                 createFigureDialog.show(baseHolder.getActivity().getSupportFragmentManager(), "");
                 this.dismiss();
             }

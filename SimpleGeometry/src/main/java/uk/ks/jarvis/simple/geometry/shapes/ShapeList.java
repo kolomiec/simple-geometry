@@ -24,6 +24,10 @@ public class ShapeList {
         color = BaseHelper.getRandomColor();
     }
 
+    public static List<Shape> getShapeArray() {
+        return shapeList;
+    }
+
     public void add(int number, Shape shape) {
         shapeList.add(number, shape);
     }
@@ -75,10 +79,7 @@ public class ShapeList {
     }
 
     public void move(Point touchPoint) {
-
-//        boolean manyFigures = (shapeList.size() > 1);
         for (Shape shape : shapeList) {
-//            if (shape.getClass() == Line.class) shape.move(touchPoint, ONLY_CHANGE);
             shape.isTouched(touchPoint);
             shape.move(new Point(touchPoint.getX(), touchPoint.getY()), ONLY_MOVE);
         }
@@ -86,12 +87,11 @@ public class ShapeList {
     }
 
     public void move(Point touchPoint, Shape shape) {
-//        boolean manyFigures = (shapeList.size() > 1);
-        if (shapeList.contains(shape)) {
-//            if (shape.getClass() == Line.class) shape.move(touchPoint, ONLY_MOVE);
-//            shape.move(new Point(prvTouchPoint.getX() - touchPoint.getX(), prvTouchPoint.getY() - touchPoint.getY()), ONLY_MOVE);
+        try {
             shape.isTouched(touchPoint);
             shape.move(new Point(touchPoint.getX(), touchPoint.getY()), ONLY_CHANGE);
+        } catch (Exception ignored) {
+
         }
         prvTouchPoint = new Point(touchPoint);
     }
@@ -140,13 +140,9 @@ public class ShapeList {
     }
 
     public void turn(Point centralTurnPoint, double angle) {
-        for (Shape shape1 : shapeList) {
-            shape1.turn(centralTurnPoint, (float) angle);
+        for (Shape shape : shapeList) {
+            shape.turn(centralTurnPoint, angle);
         }
-    }
-
-    public static List<Shape> getShapeArray() {
-        return shapeList;
     }
 
     @Override

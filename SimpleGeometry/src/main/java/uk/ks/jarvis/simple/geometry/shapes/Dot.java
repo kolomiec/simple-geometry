@@ -16,12 +16,9 @@ import static uk.ks.jarvis.simple.geometry.utils.Mathematics.sin;
  * Created by sayenko on 7/14/13.
  */
 public class Dot extends BaseShape {
-    private final Float radius = 5.0f;
     private final String label;
     private int color = 0;
     private Point lastTouchCoordinates = new Point(0f, 0f);
-    private Point deltaTouchCoordinates = new Point(0f, 0f);
-//    private List<Shape> shapeList = new ArrayList<>();
     private Point point;
     private Point delta = new Point(15f, 15f);
 
@@ -35,6 +32,7 @@ public class Dot extends BaseShape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
         paint.setStyle(Paint.Style.FILL);
+        Float radius = 5.0f;
         canvas.drawCircle((float) point.getX(), (float) point.getY(), radius, paint);
 
         BaseHelper.drawTextWithShadow(canvas, label, (float) point.getX() + radius, (float) point.getY() + radius / 2);
@@ -47,7 +45,7 @@ public class Dot extends BaseShape {
 
     @Override
     public void move(Point touchCoordinates, boolean onlyMove) {
-        deltaTouchCoordinates = new Point(lastTouchCoordinates.getX() - touchCoordinates.getX(),
+        Point deltaTouchCoordinates = new Point(lastTouchCoordinates.getX() - touchCoordinates.getX(),
                 lastTouchCoordinates.getY() - touchCoordinates.getY());
         this.point = new Point(this.point.getX() - deltaTouchCoordinates.getX(), this.point.getY() - deltaTouchCoordinates.getY());
         lastTouchCoordinates = new Point(touchCoordinates);

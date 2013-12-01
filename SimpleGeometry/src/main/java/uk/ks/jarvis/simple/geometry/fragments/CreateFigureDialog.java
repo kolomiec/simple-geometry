@@ -11,6 +11,7 @@ import android.widget.TextView;
 import uk.ks.jarvis.simple.geometry.R;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.holders.BaseHolder;
+import uk.ks.jarvis.simple.geometry.shapes.Circle;
 import uk.ks.jarvis.simple.geometry.shapes.Dot;
 import uk.ks.jarvis.simple.geometry.shapes.Line;
 import uk.ks.jarvis.simple.geometry.utils.LettersGenerator;
@@ -28,19 +29,19 @@ public class CreateFigureDialog extends DialogFragment implements View.OnClickLi
     private View view;
     private TextView dotButton;
     private TextView lineButton;
-    private Point point = new Point(0f, 0f);
+    private Dot dot;
     private TextView circleButton;
 
-    public CreateFigureDialog(BaseHolder baseHolder, Point point) {
+    public CreateFigureDialog(BaseHolder baseHolder, Dot dot) {
         super();
         this.baseHolder = baseHolder;
-        this.point = point;
+        this.dot = dot;
     }
 
-    public CreateFigureDialog(BaseHolder baseHolder) {
-        super();
-        this.baseHolder = baseHolder;
-    }
+//    public CreateFigureDialog(BaseHolder baseHolder) {
+//        super();
+//        this.baseHolder = baseHolder;
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,17 +71,16 @@ public class CreateFigureDialog extends DialogFragment implements View.OnClickLi
         if (dotButton.getId() == view.getId()) {
             Dot dot = new Dot(new Point(0f, 0f), LettersGenerator.getInstance().getNextUpperCaseName());
             baseHolder.setCreateFigureMode(dot);
-//            Toast.makeText(baseHolder.getContext(), "Touch the screen to draw a dot.", 50).show();
             this.dismiss();
-//        } else if (circleButton.getId() == view.getId()) {
-//            Circle circle = new Circle(1f, new Point(0f, 0f), LettersGenerator.getInstance().getNextUpperCaseName());
-//            baseHolder.setCreateFigureMode(circle);
-//            Toast.makeText(baseHolder.getContext(), "Drag your finger across the screen to draw a circle.", 50).show();
-//            this.dismiss();
+
+        } else if (circleButton.getId() == view.getId()) {
+            Circle circle = new Circle(1f, dot);
+            baseHolder.setCreateFigureMode(circle);
+            this.dismiss();
+
         } else if (lineButton.getId() == view.getId()) {
-            Line line = new Line(point, 1f, LettersGenerator.getInstance().getNextLowCaseName());
+            Line line = new Line(dot, 1f, LettersGenerator.getInstance().getNextLowCaseName());
             baseHolder.setCreateFigureMode(line);
-//            Toast.makeText(baseHolder.getContext(), "Drag your finger across the screen to draw a line.", 50).show();
             this.dismiss();
 
         } else if (view.getId() == btnCancel.getId()) {

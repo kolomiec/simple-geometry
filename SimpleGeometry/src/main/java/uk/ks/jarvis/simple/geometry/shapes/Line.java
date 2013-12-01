@@ -13,8 +13,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
-import static uk.ks.jarvis.simple.geometry.utils.Mathematics.cos;
-import static uk.ks.jarvis.simple.geometry.utils.Mathematics.sin;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.tg;
 
 /**
@@ -28,13 +26,11 @@ public class Line extends BaseShape {
     private int color = 0;
     private int numberTouchedPoint = 0;
     private double angle;
-    private Point lastTouchCoordinates = new Point(0f, 0f);
-    private Point deltaTouchCoordinates = new Point(0f, 0f);
-    private Point point;
+    private Dot dot;
 
 
-    public Line(Point point, Float angle, String label) {
-        this.point = point;
+    public Line(Dot dot, Float angle, String label) {
+        this.dot = dot;
         this.label = label;
         this.angle = angle % 360;
         color = BaseHelper.getRandomColor();
@@ -48,14 +44,14 @@ public class Line extends BaseShape {
         canvas.drawLine((float) getFirstPoint(angle).getX(), (float) getFirstPoint(angle).getY(), (float) getSecondPoint(angle).getX(), (float) getSecondPoint(angle).getY(), paint);
 
         Float pointRadius = 5.0f;
-        canvas.drawCircle((float) point.getX(), (float) point.getY(), pointRadius, paint);
+        canvas.drawCircle((float) dot.getPoint().getX(), (float) dot.getPoint().getY(), pointRadius, paint);
         BaseHelper.drawTextWithShadow(canvas, label, (float) getFirstPoint(angle).getX() + pointRadius, (float) getFirstPoint(angle).getY() - pointRadius / 2);
         BaseHelper.drawTextWithShadow(canvas, label, (float) getSecondPoint(angle).getX() + pointRadius, (float) getSecondPoint(angle).getY() - pointRadius / 2);
     }
 
     @Override
     public String toString() {
-        return "Line " + label + " - x: " + Math.round(point.getX()) + " - y: " + Math.round(point.getY()) +
+        return "Line " + label + " - x: " + Math.round(dot.getPoint().getX()) + " - y: " + Math.round(dot.getPoint().getY()) +
                 ", angle : " + round(angle);
     }
 
@@ -63,28 +59,28 @@ public class Line extends BaseShape {
         Point p = new Point(0f, 0f);
         if ((angle >= 0) && (angle < 45)) { // ok
             p.setX(SystemInformation.DISPLAY_WIDTH);
-            p.setY(((-SystemInformation.DISPLAY_WIDTH + point.getX()) * tg(angle)) + point.getY());
+            p.setY(((-SystemInformation.DISPLAY_WIDTH + dot.getPoint().getX()) * tg(angle)) + dot.getPoint().getY());
         } else if ((angle >= 45) && (angle < 90)) { // ok
-            p.setX(((point.getY()) / tg(angle)) + point.getX());
+            p.setX(((dot.getPoint().getY()) / tg(angle)) + dot.getPoint().getX());
             p.setY(0f);
         } else if ((angle >= 90) && (angle < 135)) { // ok
-            p.setX(((point.getY()) / tg(angle)) + point.getX());
+            p.setX(((dot.getPoint().getY()) / tg(angle)) + dot.getPoint().getX());
             p.setY(0f);
         } else if ((angle >= 135) && (angle < 180)) { // ok
             p.setX(0f);
-            p.setY(((point.getX()) * tg(angle)) + point.getY());
+            p.setY(((dot.getPoint().getX()) * tg(angle)) + dot.getPoint().getY());
         } else if ((angle >= 180) && (angle < 225)) { // ok
             p.setX(0f);
-            p.setY(((point.getX()) * tg(angle)) + point.getY());
+            p.setY(((dot.getPoint().getX()) * tg(angle)) + dot.getPoint().getY());
         } else if ((angle >= 225) && (angle < 270)) { // ok
-            p.setX(((-SystemInformation.DISPLAY_HEIGHT + point.getY()) / tg(angle)) + point.getX());
+            p.setX(((-SystemInformation.DISPLAY_HEIGHT + dot.getPoint().getY()) / tg(angle)) + dot.getPoint().getX());
             p.setY(SystemInformation.DISPLAY_HEIGHT);
         } else if ((angle >= 270) && (angle < 315)) { // ok
-            p.setX(((-SystemInformation.DISPLAY_HEIGHT + point.getY()) / tg(angle)) + point.getX());
+            p.setX(((-SystemInformation.DISPLAY_HEIGHT + dot.getPoint().getY()) / tg(angle)) + dot.getPoint().getX());
             p.setY(SystemInformation.DISPLAY_HEIGHT);
         } else if ((angle >= 315) && (angle < 360)) { // ok
             p.setX(SystemInformation.DISPLAY_WIDTH);
-            p.setY(((-SystemInformation.DISPLAY_WIDTH + point.getX()) * tg(angle)) + point.getY());
+            p.setY(((-SystemInformation.DISPLAY_WIDTH + dot.getPoint().getX()) * tg(angle)) + dot.getPoint().getY());
         }
         return p;
     }
@@ -95,18 +91,13 @@ public class Line extends BaseShape {
 
     @Override
     public void move(Point touchCoordinates, boolean onlyMove) {
-        if (onlyMove || numberTouchedPoint == 0) {
-            deltaTouchCoordinates = new Point(lastTouchCoordinates.getX() - touchCoordinates.getX(),
-                    lastTouchCoordinates.getY() - touchCoordinates.getY());
-            this.point = new Point(this.point.getX() - deltaTouchCoordinates.getX(), this.point.getY() - deltaTouchCoordinates.getY());
-            lastTouchCoordinates = new Point(touchCoordinates);
-        } else {
+        if (!onlyMove && numberTouchedPoint != 0) {
             setAngle(touchCoordinates);
         }
     }
 
     public void setAngle(Point point) {
-        angle = bringToShapes(bringToAngles(getAngleFrom2Points(this.point, point)));
+        angle = bringToShapes(bringToAngles(getAngleFrom2Points(this.dot.getPoint(), point)));
         if (numberTouchedPoint == NUMBER_OF_SECOND_POINT) angle = (angle + 180) % 360;
     }
 
@@ -123,7 +114,7 @@ public class Line extends BaseShape {
     }
 
     private double bringToDot(double angle, Dot dot) {
-        double dotAngle = getAngleFrom2Points(this.point, dot.getPoint());
+        double dotAngle = getAngleFrom2Points(this.dot.getPoint(), dot.getPoint());
 
         if (angle + 3 > dotAngle && angle - 3 < dotAngle) {
             angle = dotAngle;
@@ -144,14 +135,14 @@ public class Line extends BaseShape {
 
     @Override
     public boolean isTouched(Point point) {
-        if (this.point.nearlyEquals(point)) {
+        if (this.dot.getPoint().nearlyEquals(point)) {
             numberTouchedPoint = 0;
             return true;
         } else {
-            if (isLineTouched(this.point, getFirstPoint(angle), point)) {
+            if (isLineTouched(this.dot.getPoint(), getFirstPoint(angle), point)) {
                 numberTouchedPoint = NUMBER_OF_FIRST_POINT;
                 return true;
-            } else if (isLineTouched(this.point, getSecondPoint(angle), point)) {
+            } else if (isLineTouched(this.dot.getPoint(), getSecondPoint(angle), point)) {
                 numberTouchedPoint = NUMBER_OF_SECOND_POINT;
                 return true;
             }
@@ -175,7 +166,7 @@ public class Line extends BaseShape {
     }
 
     public Point getPoint() {
-        return point;
+        return dot.getPoint();
     }
 
     @Override
@@ -199,10 +190,6 @@ public class Line extends BaseShape {
 
     @Override
     public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta) {
-        point.setX(((-centralZoomPoint.getX() + this.point.getX()) * zoomRatio) + centralZoomPoint.getX());
-        point.setY(((-centralZoomPoint.getY() + this.point.getY()) * zoomRatio) + centralZoomPoint.getY());
-        point.setX(point.getX() + moveDelta.getX());
-        point.setY(point.getY() + moveDelta.getY());
     }
 
     @Override
@@ -217,14 +204,9 @@ public class Line extends BaseShape {
         if (this.angle > 360) {
             this.angle %= 360;
         }
-        double angle = (getAngleFrom2Points(centralTurnPoint, point) + deltaAngle + 360) % 360;
-        double hypotenuse = getLength(point, centralTurnPoint);
-        point.setX(hypotenuse * cos(angle) + centralTurnPoint.getX());
-        point.setY(-hypotenuse * sin(angle) + centralTurnPoint.getY());
     }
 
     @Override
     public void refreshPrvTouchPoint(Point newTouchPoint) {
-        lastTouchCoordinates = new Point(newTouchPoint);
     }
 }

@@ -9,10 +9,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.coordinateplane.CoordinateSystem;
-import uk.ks.jarvis.simple.geometry.fragments.CreateFigureDialog;
 import uk.ks.jarvis.simple.geometry.fragments.ShapeDialog;
 import uk.ks.jarvis.simple.geometry.shapes.Dot;
 import uk.ks.jarvis.simple.geometry.shapes.Line;
@@ -30,7 +30,6 @@ import static uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation.ini
 public class BaseHolder extends View implements View.OnTouchListener, View.OnLongClickListener {
 
     private final Context context;
-    //    Point lastFirstPointerCoordinates = new Point(0, 0);
     private Zoom zoom = new Zoom();
     private Point firstPointerCoordinates = new Point(0f, 0f);
     private Point secondPointerCoordinates = new Point(0f, 0f);
@@ -68,6 +67,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         this.context = context;
         this.activity = activity;
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Toast.makeText(context, "Touch the screen to draw a dot.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -78,8 +78,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         pointerCount = motionEvent.getPointerCount();
-//        lastFirstPointerCoordinates.setXY(firstPointerCoordinates.getX(), firstPointerCoordinates.getY());
-        firstPointerCoordinates.setXY(motionEvent.getX(), motionEvent.getY());
+        firstPointerCoordinates = new Point(motionEvent.getX(), motionEvent.getY());
         switch (motionEvent.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
@@ -91,6 +90,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 shapes.refreshPrvTouchPoint(firstPointerCoordinates);
                 isLongClick = true;
                 break;
+
             case MotionEvent.ACTION_MOVE:
                 if (createFigureMode) {
                     shapes.move(new Point(firstPointerCoordinates.getX(), firstPointerCoordinates.getY()), createShape);
@@ -113,6 +113,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                     isLongClick = false;
                 }
                 break;
+
             case MotionEvent.ACTION_UP:
                 if (scaleMode) {
                     scaleMode = false;
@@ -131,9 +132,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private void CreateNewFigureInCreateFigureMode(MotionEvent motionEvent) {
         if (((createShape.getClass()) == (Line.class))) {
             ((Line) createShape).setAngle(firstPointerCoordinates);
-//        } else if (((createShape.getClass()) == (Circle.class))) {
-//            ((Circle) createShape).getCoordinatesOfCenterPoint().setX(motionEvent.getX());
-//            ((Circle) createShape).getCoordinatesOfCenterPoint().setY(motionEvent.getY());
         } else if (((createShape.getClass()) == (Dot.class))) {
             ((Dot) createShape).getPoint().setX(motionEvent.getX());
             ((Dot) createShape).getPoint().setY(motionEvent.getY());
@@ -193,16 +191,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         if (isLongClick) {
             Shape clickedShape = getClickedShapeFromShapeList();
             if (clickedShape != null) {
-//                Dot someDot = shapes.someDotTouched(firstPointerCoordinates);
-//                if (someDot != null) {
-                    ShapeDialog c = new ShapeDialog(this, shapes, clickedShape);
-                    c.show(activity.getSupportFragmentManager(), "");
-//                } else {
-//                    ShapeDialog c = new ShapeDialog(this, shapes, clickedShape);
-//                    c.show(activity.getSupportFragmentManager(), "");
-//                }
-            } else if (shapes == null) {
-                CreateFigureDialog c = new CreateFigureDialog(this);
+                ShapeDialog c = new ShapeDialog(this, shapes, clickedShape);
                 c.show(activity.getSupportFragmentManager(), "");
             }
             return true;

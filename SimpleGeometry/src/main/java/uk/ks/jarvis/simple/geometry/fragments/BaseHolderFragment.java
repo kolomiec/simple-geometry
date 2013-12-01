@@ -54,8 +54,8 @@ public class BaseHolderFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create_figure_item:
-                CreateFigureDialog createFigureDialog = new CreateFigureDialog((BaseHolder) baseHolder);
-                createFigureDialog.show(this.getActivity().getSupportFragmentManager(), "");
+//                CreateFigureDialog createFigureDialog = new CreateFigureDialog((BaseHolder) baseHolder);
+//                createFigureDialog.show(this.getActivity().getSupportFragmentManager(), "");
                 return true;
             case R.id.menu_preferences_item:
                 startActivity(new Intent(getActivity(), PreferenceActivity.class));
