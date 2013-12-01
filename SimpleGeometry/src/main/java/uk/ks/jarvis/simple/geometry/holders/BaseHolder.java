@@ -196,7 +196,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
             return true;
         }
         return false;
-    }
+    } 
 
     private Shape getClickedShapeFromShapeList() {
         if (shapes.isTouched(firstPointerCoordinates)) {
