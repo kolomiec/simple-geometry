@@ -78,12 +78,6 @@ public class Dot extends BaseShape {
     }
 
     @Override
-    public void changeCoordinatesToDelta(Point delta) {
-        point.setX(point.getX() - delta.getX());
-        point.setY(point.getY() - delta.getY());
-    }
-
-    @Override
     public String getLabel() {
         return this.label;
     }

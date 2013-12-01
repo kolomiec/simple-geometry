@@ -180,10 +180,6 @@ public class Line extends BaseShape {
     }
 
     @Override
-    public void changeCoordinatesToDelta(Point delta) {
-    }
-
-    @Override
     public String getLabel() {
         return this.label;
     }

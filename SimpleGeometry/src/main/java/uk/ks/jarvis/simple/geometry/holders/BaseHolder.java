@@ -34,7 +34,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private Point firstPointerCoordinates = new Point(0f, 0f);
     private Point secondPointerCoordinates = new Point(0f, 0f);
     private Point downCoordinates = new Point(0f, 0f);
-    private boolean thereAreTouchedFigures = false;
     private boolean isTouchedShape;
     private FragmentActivity activity;
     private ShapeList shapes = new ShapeList();
@@ -85,7 +84,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 downCoordinates.setXY(motionEvent.getX(), motionEvent.getY());
 
                 if (createFigureMode) {
-                    CreateNewFigureInCreateFigureMode(motionEvent);
+                    changeFigureAndPutInList(motionEvent);
                 }
                 shapes.refreshPrvTouchPoint(firstPointerCoordinates);
                 isLongClick = true;
@@ -129,7 +128,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         return false;
     }
 
-    private void CreateNewFigureInCreateFigureMode(MotionEvent motionEvent) {
+    private void changeFigureAndPutInList(MotionEvent motionEvent) {
         if (((createShape.getClass()) == (Line.class))) {
             ((Line) createShape).setAngle(firstPointerCoordinates);
         } else if (((createShape.getClass()) == (Dot.class))) {

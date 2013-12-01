@@ -26,8 +26,6 @@ public interface Shape {
 
     public void setColor(int color);
 
-    public void changeCoordinatesToDelta(Point delta);
-
     public String getLabel();
 
     public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta);

@@ -18,7 +18,6 @@ public class ShapeList {
     boolean ONLY_CHANGE = false;
     boolean ONLY_MOVE = true;
     private int color = 0;
-    private Point prvTouchPoint = new Point(0, 0);
 
     public ShapeList() {
         color = BaseHelper.getRandomColor();
@@ -49,19 +48,6 @@ public class ShapeList {
         }
     }
 
-    public Point checkTouch(Shape shape1, Shape shape2) {
-        if (((shape1.getClass()) == (Line.class)) && ((shape2.getClass()) == (Circle.class))) {
-            return shape1.checkTouchWithOtherFigure((Circle) shape2);
-
-//        } else if (((shape1.getClass()) == (Circle.class)) && ((shape2.getClass()) == (Circle.class))) {
-//            return shape1.checkTouchWithOtherFigure((Circle) shape2);
-
-//        } else if (((shape1.getClass()) == (Circle.class)) && (((shape2.getClass()) == (Line.class)) || ((shape2.getClass()) == (EndlessLine.class)))) {
-//            return shape1.checkTouchWithOtherFigure((Line) shape2);
-        }
-        return null;
-    }
-
     public void draw(Canvas canvas, Paint paint) {
         if (shapeList.size() == 1) {
             paint.setColor(shapeList.get(0).getColor());
@@ -83,7 +69,6 @@ public class ShapeList {
             shape.isTouched(touchPoint);
             shape.move(new Point(touchPoint.getX(), touchPoint.getY()), ONLY_MOVE);
         }
-        prvTouchPoint = new Point(touchPoint);
     }
 
     public void move(Point touchPoint, Shape shape) {
@@ -93,7 +78,6 @@ public class ShapeList {
         } catch (Exception ignored) {
 
         }
-        prvTouchPoint = new Point(touchPoint);
     }
 
     public boolean isTouched(Point point) {
@@ -118,25 +102,6 @@ public class ShapeList {
             }
         }
         return touchedShape;
-    }
-
-    public boolean checkTouchWithOtherFigure(ShapeList shapeList) {
-        for (Shape shape1 : ShapeList.shapeList) {
-            for (Shape shape2 : getShapeArray()) {
-                Point delta = checkTouch(shape1, shape2);
-                if (delta != null) {
-                    changeCoordinatesToDelta(delta);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void changeCoordinatesToDelta(Point delta) {
-        for (Shape shape1 : shapeList) {
-            shape1.changeCoordinatesToDelta(delta);
-        }
     }
 
     public void turn(Point centralTurnPoint, double angle) {

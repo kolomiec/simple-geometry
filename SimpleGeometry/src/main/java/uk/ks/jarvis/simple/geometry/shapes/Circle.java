@@ -3,6 +3,8 @@ package uk.ks.jarvis.simple.geometry.shapes;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.util.List;
+
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
@@ -51,8 +53,27 @@ public class Circle extends BaseShape {
     @Override
     public void move(Point touchCoordinates, boolean onlyMove) {
         if (radiusChangeMode && !onlyMove) {
-            changeRadius(touchCoordinates);
+            radius = bringToShapes(getNewRadius(touchCoordinates));
         }
+    }
+
+    private double bringToShapes(double newRadius) {
+        List<Shape> shapeList = ShapeList.getShapeArray();
+
+        for (Shape shape : shapeList) {
+            if (shape.getClass() == Dot.class) {
+
+            } else if (shape.getClass() == Line.class) {
+
+            } else if (shape.getClass() == Circle.class) {
+
+            } //ToDo change radius
+        }
+        return newRadius;
+    }
+
+    private double getNewRadius(Point touchCoordinates) {
+        return BaseHelper.getLength(this.centerDot.getPoint(), touchCoordinates);
     }
 
     public Point getCoordinatesOfCenterPoint() {
@@ -73,13 +94,9 @@ public class Circle extends BaseShape {
         this.color = color;
     }
 
-    @Override
-    public void changeCoordinatesToDelta(Point delta) {
-    }
-
-    @Override
+     @Override
     public String getLabel() {
-        return this.getLabel();
+        return this.centerDot.getLabel();
     }
 
     @Override
@@ -116,8 +133,8 @@ public class Circle extends BaseShape {
 //
 //        if (((length1) < (length2 + 15)) && ((length1) > (length2 - 15))) {
 //            this.getNewCoordinates(circle.getCoordinatesOfCenterPoint());
-//            Point newCoordinates = new Point(getCoordinatesOfBorderOfCircle(centerDot, circle.getCoordinatesOfCenterPoint(), length2));
-//            return new Point(drawedCenterPoint.getX() - newCoordinates.getX(), drawedCenterPoint.getY() - newCoordinates.getY());
+//            Point newCoordinates = new Point(getCoordinatesOfBorderOfCircle(centerDot.getPoint(), circle.getCoordinatesOfCenterPoint(), length2));
+//            return new Point(centerDot.getPoint().getX() - newCoordinates.getX(), centerDot.getPoint().getY() - newCoordinates.getY());
 //        }
         return null;
     }
@@ -159,9 +176,4 @@ public class Circle extends BaseShape {
 
         return dotCoordinates;
     }
-
-    public void changeRadius(Point point) {
-        radius = BaseHelper.getLength(this.centerDot.getPoint(), point);
-    }
-
 }
