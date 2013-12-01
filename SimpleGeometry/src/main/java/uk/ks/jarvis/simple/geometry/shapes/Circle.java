@@ -114,6 +114,11 @@ public class Circle extends BaseShape {
     }
 
     @Override
+    public void refreshPrvTouchPoint(Point newTouchPoint) {
+        lastTouchCoordinates = new Point(newTouchPoint);
+    }
+
+    @Override
     public boolean isTouched(Point point) {
         radiusChangeMode = false;
         setPoint(lastTouchCoordinates, point);

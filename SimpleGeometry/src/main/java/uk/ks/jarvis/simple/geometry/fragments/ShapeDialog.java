@@ -25,8 +25,8 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
     private static Button btnCancel;
     private static TextView btnDelete;
     private static TextView btnColor;
-    private static TextView btnUnMergeAll;
-    private static TextView btnDisconnectFigure;
+    private static TextView createFigure;
+    //    private static TextView btnDisconnectFigure;
     private final BaseHolder baseHolder;
     private String title;
     private ShapeList shapeListWhichContainsTouchedShape;
@@ -58,18 +58,18 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
-        if (shapeListWhichContainsTouchedShape.getShapeArray().size() == 1) {
+        if (touchedShape.getClass() != Dot.class) {
             view = inflater.inflate(R.layout.shape_options_fragment, container);
         } else {
-            view = inflater.inflate(R.layout.merge_shape_options_fragment, container);
+            view = inflater.inflate(R.layout.dot_options_fragment, container);
             assert view != null;
 
-            btnUnMergeAll = (TextView) view.findViewById(R.id.unmerge_all);
-            btnUnMergeAll.setOnClickListener(this);
+            createFigure = (TextView) view.findViewById(R.id.create_figure);
+            createFigure.setOnClickListener(this);
 
-            btnDisconnectFigure = (TextView) view.findViewById(R.id.disconnect_figure);
-            btnDisconnectFigure.setOnClickListener(this);
-            btnDisconnectFigure.setText("Disconnect " + title);
+//            btnDisconnectFigure = (TextView) view.findViewById(R.id.disconnect_figure);
+//            btnDisconnectFigure.setOnClickListener(this);
+//            btnDisconnectFigure.setText("Disconnect " + title);
         }
 
         assert view != null;
@@ -95,7 +95,7 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         if (view.getId() == btnDelete.getId()) {
-            baseHolder.removeShape(0);
+//            baseHolder.removeShape(0);
             baseHolder.invalidate();
             this.dismiss();
         } else if (view.getId() == btnColor.getId()) {
@@ -104,17 +104,17 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
             this.dismiss();
         } else if (view.getId() == btnCancel.getId()) {
             this.dismiss();
-        } else if (shapeListWhichContainsTouchedShape.getShapeArray().size() > 1) {
-            if (view.getId() == btnUnMergeAll.getId()) {
-                baseHolder.unMergeAllFigures(shapeListWhichContainsTouchedShape);
-                baseHolder.invalidate();
+        } else if (touchedShape.getClass() == Dot.class) {
+            if (view.getId() == createFigure.getId()) {
+                CreateFigureDialog createFigureDialog = new CreateFigureDialog(baseHolder, ((Dot) touchedShape).getPoint());
+                createFigureDialog.show(baseHolder.getActivity().getSupportFragmentManager(), "");
                 this.dismiss();
             }
-            if (view.getId() == btnDisconnectFigure.getId()) {
-                baseHolder.disconnectFigure(shapeListWhichContainsTouchedShape, touchedShape);
-                baseHolder.invalidate();
-                this.dismiss();
-            }
+//            if (view.getId() == btnDisconnectFigure.getId()) {
+//                baseHolder.disconnectFigure(shapeListWhichContainsTouchedShape, touchedShape);
+//                baseHolder.invalidate();
+//                this.dismiss();
+//            }
         }
     }
 }

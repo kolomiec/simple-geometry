@@ -11,7 +11,6 @@ import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
-import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.cos;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.sin;
 
@@ -51,18 +50,22 @@ public class Dot extends BaseShape {
 
     @Override
     public void move(Point touchCoordinates, boolean onlyMove) {
-        setPoint(deltaTouchCoordinates, lastTouchCoordinates.getX() - touchCoordinates.getX(), lastTouchCoordinates.getY() - touchCoordinates.getY());
-        setPoint(this.point, this.point.getX() - deltaTouchCoordinates.getX(), this.point.getY() - deltaTouchCoordinates.getY());
-        setPoint(lastTouchCoordinates, touchCoordinates);
+        deltaTouchCoordinates = new Point(lastTouchCoordinates.getX() - touchCoordinates.getX(),
+                lastTouchCoordinates.getY() - touchCoordinates.getY());
+        this.point = new Point(this.point.getX() - deltaTouchCoordinates.getX(), this.point.getY() - deltaTouchCoordinates.getY());
+        lastTouchCoordinates = new Point(touchCoordinates);
+    }
+
+    @Override
+    public void refreshPrvTouchPoint(Point newTouchPoint) {
+        lastTouchCoordinates = new Point(newTouchPoint);
     }
 
     public boolean isTouched(Point point) {
-        setPoint(lastTouchCoordinates, point);
         boolean betweenDelta = (this.point.getX() < (point.getX() + delta.getX())) && (this.point.getX() > (point.getX() - delta.getX()));
         if (betweenDelta) {
             boolean betweenDelta2 = (this.point.getY() < (point.getY() + delta.getY())) && (this.point.getY() > (point.getY() - delta.getY()));
             if (betweenDelta2) {
-                setPoint(lastTouchCoordinates, point);
                 return true;
             }
         }

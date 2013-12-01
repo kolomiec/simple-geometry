@@ -51,10 +51,12 @@ public class BaseHelper {
         point1.setY(point2.getY());
     }
 
-    public static float getAngleFrom2Points(Point firstPoint, Point secondPoint) {
+    public static double getAngleFrom2Points(Point firstPoint, Point secondPoint) {
         Point coord = new Point(abs(secondPoint.getX() - firstPoint.getX()), abs(secondPoint.getY() - firstPoint.getY()));
         double tgOfAngle = coord.getY()/coord.getX();
         double angle = arctg(tgOfAngle);
+//                Point coord = new Point(abs(secondPoint.getX() - firstPoint.getX()), abs(secondPoint.getY() - firstPoint.getY()));
+//                double angle = (90 / (coord.getX() + coord.getY())) * coord.getY();
 
         if ((secondPoint.getY() > firstPoint.getY()) && (secondPoint.getX() > firstPoint.getX())) { // if 1 coordinate plane
 
@@ -66,6 +68,6 @@ public class BaseHelper {
             angle = (360 - angle);
         }
         angle = 360 - (angle % 360);
-        return (float) angle;
+        return angle;
     }
 }

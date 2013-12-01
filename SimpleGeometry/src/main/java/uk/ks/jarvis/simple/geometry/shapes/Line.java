@@ -3,16 +3,19 @@ package uk.ks.jarvis.simple.geometry.shapes;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.util.List;
+
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.atan;
 import static java.lang.Math.round;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.cos;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.sin;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.tg;
 
 /**
@@ -27,8 +30,8 @@ public class Line extends BaseShape {
     private int numberTouchedPoint = 0;
     private double angle;
     private Point lastTouchCoordinates = new Point(0f, 0f);
-    private Point point;
     private Point deltaTouchCoordinates = new Point(0f, 0f);
+    private Point point;
 
 
     public Line(Point point, Float angle, String label) {
@@ -54,7 +57,7 @@ public class Line extends BaseShape {
     @Override
     public String toString() {
         return "Line " + label + " - x: " + Math.round(point.getX()) + " - y: " + Math.round(point.getY()) +
-                ", angle : " + round(angle) + ", newAngle : " + (90 * (atan(tg(angle)) / atan(tg(90)))) + ", tg : " + tg(angle);
+                ", angle : " + round(angle);
     }
 
     public Point getFirstPoint(double angle) {
@@ -92,20 +95,45 @@ public class Line extends BaseShape {
     }
 
     @Override
-    public void move(Point point, boolean onlyMove) {
+    public void move(Point touchCoordinates, boolean onlyMove) {
         if (onlyMove || numberTouchedPoint == 0) {
-            changePointCoordinates(point);
+            deltaTouchCoordinates = new Point(lastTouchCoordinates.getX() - touchCoordinates.getX(),
+                    lastTouchCoordinates.getY() - touchCoordinates.getY());
+            this.point = new Point(this.point.getX() - deltaTouchCoordinates.getX(), this.point.getY() - deltaTouchCoordinates.getY());
+            lastTouchCoordinates = new Point(touchCoordinates);
         } else {
-            setAngle(point);
+            setAngle(touchCoordinates);
         }
     }
 
     public void setAngle(Point point) {
-        angle = bringToAngles(getAngleFrom2Points(this.point, point));
+        angle = bringToShapes(bringToAngles(getAngleFrom2Points(this.point, point)));
         if (numberTouchedPoint == NUMBER_OF_SECOND_POINT) angle = (angle + 180) % 360;
     }
 
-    private float bringToAngles(float angle) {
+    private double bringToShapes(double angle) {
+        List<Shape> shapeList = ShapeList.getShapeArray();
+
+        for (Shape shape : shapeList) {
+            if (shape.getClass() == Dot.class) {
+                angle = bringToDot(angle, (Dot) shape);
+            }
+        }
+
+        return angle;
+    }
+
+    private double bringToDot(double angle, Dot dot) {
+        double dotAngle = getAngleFrom2Points(this.point, dot.getPoint());
+
+        if (angle + 3 > dotAngle && angle - 3 < dotAngle) {
+            angle = dotAngle;
+        }
+
+        return angle;
+    }
+
+    private double bringToAngles(double angle) {
         final int delta = 4;
         float angleOfAttraction = 0f;
         do {
@@ -117,8 +145,7 @@ public class Line extends BaseShape {
 
     @Override
     public boolean isTouched(Point point) {
-        setPoint(lastTouchCoordinates, point);
-        if (isDotTouched(this.point, point)) {
+        if (this.point.nearlyEquals(point)) {
             numberTouchedPoint = 0;
             return true;
         } else {
@@ -173,7 +200,6 @@ public class Line extends BaseShape {
 
     @Override
     public void changeCoordinatesToDelta(Point delta) {
-
     }
 
     @Override
@@ -183,14 +209,17 @@ public class Line extends BaseShape {
 
     @Override
     public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta) {
-
+        point.setX(((-centralZoomPoint.getX() + this.point.getX()) * zoomRatio) + centralZoomPoint.getX());
+        point.setY(((-centralZoomPoint.getY() + this.point.getY()) * zoomRatio) + centralZoomPoint.getY());
+        point.setX(point.getX() + moveDelta.getX());
+        point.setY(point.getY() + moveDelta.getY());
     }
 
     @Override
-    public void turn(Point centralTurnPoint, double angle) {
-        this.angle += angle;
+    public void turn(Point centralTurnPoint, double deltaAngle) {
+        this.angle += deltaAngle;
 
-//        angle = (angle + 360) / 360;
+        angle = (angle + 360) % 360;
 
         if (this.angle < 0) {
             this.angle += 360;
@@ -198,6 +227,15 @@ public class Line extends BaseShape {
         if (this.angle > 360) {
             this.angle %= 360;
         }
+        double angle = (getAngleFrom2Points(centralTurnPoint, point) + deltaAngle + 360) % 360;
+        double hypotenuse = getLength(point, centralTurnPoint);
+        point.setX(hypotenuse * cos(angle) + centralTurnPoint.getX());
+        point.setY(-hypotenuse * sin(angle) + centralTurnPoint.getY());
+    }
+
+    @Override
+    public void refreshPrvTouchPoint(Point newTouchPoint) {
+        lastTouchCoordinates = new Point(newTouchPoint);
     }
 
     public void changePointCoordinates(Point touchCoordinates) {

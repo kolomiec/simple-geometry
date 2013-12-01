@@ -35,4 +35,6 @@ public interface Shape {
     public void zoom(Point centralZoomPoint, float zoomRatio, Point moveDelta);
 
     public void turn(Point centralTurnPoint, double angle);
+
+    void refreshPrvTouchPoint(Point newTouchPoint);
 }

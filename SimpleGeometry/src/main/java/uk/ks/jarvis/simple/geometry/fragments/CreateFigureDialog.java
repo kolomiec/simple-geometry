@@ -29,6 +29,7 @@ public class CreateFigureDialog extends DialogFragment implements View.OnClickLi
     private TextView dotButton;
     private TextView lineButton;
     private Point point = new Point(0f, 0f);
+    private TextView circleButton;
 
     public CreateFigureDialog(BaseHolder baseHolder, Point point) {
         super();
@@ -54,7 +55,10 @@ public class CreateFigureDialog extends DialogFragment implements View.OnClickLi
         dotButton = (TextView) view.findViewById(create_dot);
         dotButton.setOnClickListener(this);
 
-        lineButton = (TextView) view.findViewById(R.id.create_short_line);
+        circleButton = (TextView) view.findViewById(R.id.create_circle);
+        circleButton.setOnClickListener(this);
+
+        lineButton = (TextView) view.findViewById(R.id.create_line);
         lineButton.setOnClickListener(this);
 
         btnCancel = (Button) view.findViewById(R.id.cancel_button);

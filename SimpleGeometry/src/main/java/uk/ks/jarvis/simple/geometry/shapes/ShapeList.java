@@ -14,13 +14,22 @@ import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
  * Created by sayenko on 8/3/13.
  */
 public class ShapeList {
-    List<Shape> shapeList = new ArrayList<>();
-    private int color = 0;
+    private static List<Shape> shapeList = new ArrayList<>();
     boolean ONLY_CHANGE = false;
     boolean ONLY_MOVE = true;
+    private int color = 0;
+    private Point prvTouchPoint = new Point(0, 0);
 
     public ShapeList() {
         color = BaseHelper.getRandomColor();
+    }
+
+    public void add(int number, Shape shape) {
+        shapeList.add(number, shape);
+    }
+
+    public void add(Shape shape) {
+        shapeList.add(shape);
     }
 
     public void setRandomColor() {
@@ -76,12 +85,32 @@ public class ShapeList {
         }
     }
 
-    public void move(Point point) {
-        boolean manyFigures = (shapeList.size() > 1);
+    public void refreshPrvTouchPoint(Point touchCoordinates) {
         for (Shape shape : shapeList) {
-            if (shape.getClass() == Dot.class)
-                shape.move(point, manyFigures);
+            shape.refreshPrvTouchPoint(touchCoordinates);
         }
+    }
+
+    public void move(Point touchPoint) {
+
+//        boolean manyFigures = (shapeList.size() > 1);
+        for (Shape shape : shapeList) {
+//            if (shape.getClass() == Line.class) shape.move(touchPoint, ONLY_CHANGE);
+            shape.isTouched(touchPoint);
+            shape.move(new Point(touchPoint.getX(), touchPoint.getY()), ONLY_MOVE);
+        }
+        prvTouchPoint = new Point(touchPoint);
+    }
+
+    public void move(Point touchPoint, Shape shape) {
+//        boolean manyFigures = (shapeList.size() > 1);
+        if (shapeList.contains(shape)) {
+//            if (shape.getClass() == Line.class) shape.move(touchPoint, ONLY_MOVE);
+//            shape.move(new Point(prvTouchPoint.getX() - touchPoint.getX(), prvTouchPoint.getY() - touchPoint.getY()), ONLY_MOVE);
+            shape.isTouched(touchPoint);
+            shape.move(new Point(touchPoint.getX(), touchPoint.getY()), ONLY_CHANGE);
+        }
+        prvTouchPoint = new Point(touchPoint);
     }
 
     public boolean isTouched(Point point) {
@@ -95,17 +124,22 @@ public class ShapeList {
     }
 
     public Shape getTouchedFigureInList(Point point) {
+        Shape touchedShape = null;
         for (Shape shape : shapeList) {
             if (shape.isTouched(point)) {
-                return shape;
+
+                if (shape.getClass() == Dot.class)
+                    return shape;
+
+                else touchedShape = shape;
             }
         }
-        return null;
+        return touchedShape;
     }
 
     public boolean checkTouchWithOtherFigure(ShapeList shapeList) {
-        for (Shape shape1 : this.shapeList) {
-            for (Shape shape2 : shapeList.getShapeArray()) {
+        for (Shape shape1 : ShapeList.shapeList) {
+            for (Shape shape2 : getShapeArray()) {
                 Point delta = checkTouch(shape1, shape2);
                 if (delta != null) {
                     changeCoordinatesToDelta(delta);
@@ -117,23 +151,27 @@ public class ShapeList {
     }
 
     public void changeCoordinatesToDelta(Point delta) {
-        for (Shape shape1 : this.shapeList) {
+        for (Shape shape1 : shapeList) {
             shape1.changeCoordinatesToDelta(delta);
         }
     }
 
     public void turn(Point centralTurnPoint, double angle) {
-        for (Shape shape1 : this.shapeList) {
-            shape1.turn(centralTurnPoint,(float) angle);
+        for (Shape shape1 : shapeList) {
+            shape1.turn(centralTurnPoint, (float) angle);
         }
     }
 
-    public List<Shape> getShapeArray() {
+    public static List<Shape> getShapeArray() {
         return shapeList;
     }
 
     @Override
     public String toString() {
         return shapeList.get(0).toString();
+    }
+
+    public int size() {
+        return shapeList.size();
     }
 }
