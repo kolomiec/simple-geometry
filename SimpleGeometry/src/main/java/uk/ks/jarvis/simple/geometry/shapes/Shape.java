@@ -11,8 +11,6 @@ import uk.ks.jarvis.simple.geometry.beans.Point;
  */
 
 public interface Shape {
-    public boolean ONLY_CHANGE = false;
-    public boolean ONLY_MOVE = true;
 
     public void draw(Canvas c, Paint p);
 

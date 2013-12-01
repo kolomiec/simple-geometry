@@ -13,7 +13,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
-import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.setPoint;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.cos;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.sin;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.tg;
@@ -175,15 +174,6 @@ public class Line extends BaseShape {
                 getLength(linePoint1, linePoint2)) < 3);
     }
 
-    public boolean isDotTouched(Point p1, Point p2) {
-        float delta = 20f;
-        if ((p1.getX() < (p2.getX() + delta)) && (p1.getX() > (p2.getX() - delta)))
-            if ((p1.getY() < (p2.getY() + delta)) && (p1.getY() > (p2.getY() - delta))) {
-                return true;
-            }
-        return false;
-    }
-
     public Point getPoint() {
         return point;
     }
@@ -236,11 +226,5 @@ public class Line extends BaseShape {
     @Override
     public void refreshPrvTouchPoint(Point newTouchPoint) {
         lastTouchCoordinates = new Point(newTouchPoint);
-    }
-
-    public void changePointCoordinates(Point touchCoordinates) {
-        setPoint(deltaTouchCoordinates, lastTouchCoordinates.getX() - touchCoordinates.getX(), lastTouchCoordinates.getY() - touchCoordinates.getY());
-        setPoint(this.point, this.point.getX() - deltaTouchCoordinates.getX(), this.point.getY() - deltaTouchCoordinates.getY());
-        setPoint(lastTouchCoordinates, touchCoordinates);
     }
 }

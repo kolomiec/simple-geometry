@@ -90,8 +90,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 }
                 shapes.refreshPrvTouchPoint(firstPointerCoordinates);
                 isLongClick = true;
-
-//                createShape.isTouched(downCoordinates);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (createFigureMode) {

@@ -39,23 +39,6 @@ public class ShapeList {
             color = BaseHelper.getRandomColor();
     }
 
-    public Dot someDotTouched(Point point) {
-        boolean isDot = false;
-        int count = 0;
-        for (Shape shape : shapeList) {
-            if (shape.isTouched(point)) {
-                if (shapeList.get(count).getClass() == Dot.class) {
-                    isDot = true;
-                    break;
-                }
-            }
-            count++;
-        }
-        if (isDot) {
-            return ((Dot) shapeList.get(count));
-        } else return null;
-    }
-
     public void zoom(Point centralPoint, double ratio, Point moveDelta) {
         for (Shape shape : shapeList) {
             shape.zoom(centralPoint, (float) ratio, moveDelta);

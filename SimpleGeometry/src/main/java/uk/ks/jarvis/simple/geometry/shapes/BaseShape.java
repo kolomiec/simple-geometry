@@ -4,7 +4,6 @@ package uk.ks.jarvis.simple.geometry.shapes;
  * Created by oem on 9/14/13.
  */
 public abstract class BaseShape implements Shape {
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null || this.getClass() != obj.getClass()) {

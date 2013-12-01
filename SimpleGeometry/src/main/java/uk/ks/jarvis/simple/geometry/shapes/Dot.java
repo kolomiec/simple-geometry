@@ -3,9 +3,6 @@ package uk.ks.jarvis.simple.geometry.shapes;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
@@ -24,7 +21,7 @@ public class Dot extends BaseShape {
     private int color = 0;
     private Point lastTouchCoordinates = new Point(0f, 0f);
     private Point deltaTouchCoordinates = new Point(0f, 0f);
-    private List<Shape> shapeList = new ArrayList<>();
+//    private List<Shape> shapeList = new ArrayList<>();
     private Point point;
     private Point delta = new Point(15f, 15f);
 

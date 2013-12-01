@@ -55,8 +55,6 @@ public class BaseHelper {
         Point coord = new Point(abs(secondPoint.getX() - firstPoint.getX()), abs(secondPoint.getY() - firstPoint.getY()));
         double tgOfAngle = coord.getY()/coord.getX();
         double angle = arctg(tgOfAngle);
-//                Point coord = new Point(abs(secondPoint.getX() - firstPoint.getX()), abs(secondPoint.getY() - firstPoint.getY()));
-//                double angle = (90 / (coord.getX() + coord.getY())) * coord.getY();
 
         if ((secondPoint.getY() > firstPoint.getY()) && (secondPoint.getX() > firstPoint.getX())) { // if 1 coordinate plane
 
