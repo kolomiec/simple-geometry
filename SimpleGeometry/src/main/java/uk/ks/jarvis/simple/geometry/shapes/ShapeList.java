@@ -35,6 +35,10 @@ public class ShapeList {
         shapeList.add(shape);
     }
 
+    public boolean contains(Shape shape) {
+        return shapeList.contains(shape);
+    }
+
     public void setRandomColor() {
         if (shapeList.size() == 1) {
             shapeList.get(0).setColor(BaseHelper.getRandomColor());
@@ -117,5 +121,23 @@ public class ShapeList {
 
     public int size() {
         return shapeList.size();
+    }
+
+    public void removeShape(Shape shape) {
+        if (shapeList.contains(shape)) {
+            shapeList.remove(shape);
+        }
+    }
+
+    public void removeAll() {
+        try {
+            for (Shape shape : shapeList) {
+                if (!shape.getLabel().equals("A")) {
+                    removeShape(shape);
+                }
+            }
+        } catch (Exception e) {
+            removeAll();
+        }
     }
 }

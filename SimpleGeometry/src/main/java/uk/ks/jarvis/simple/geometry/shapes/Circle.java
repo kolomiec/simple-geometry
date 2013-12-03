@@ -8,6 +8,8 @@ import java.util.List;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
+import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
+
 /**
  * Created by sayenko on 7/26/13.
  */
@@ -24,7 +26,7 @@ public class Circle extends BaseShape {
     }
 
     public static Point getCoordinatesOfBorderOfCircle(Point point, Point point2, double radius) {
-        double radius2 = BaseHelper.getLength(point2, point);
+        double radius2 = getLength(point2, point);
 
         double ratioOfTheRadii = (radius / radius2);
 
@@ -62,6 +64,11 @@ public class Circle extends BaseShape {
 
         for (Shape shape : shapeList) {
             if (shape.getClass() == Dot.class) {
+                double length = getLength(centerDot.getPoint(), ((Dot) shape).getPoint());
+
+                if (length + 5 > newRadius && length - 5 < newRadius) {
+                    newRadius = length;
+                }
 
             } else if (shape.getClass() == Line.class) {
 
@@ -73,7 +80,7 @@ public class Circle extends BaseShape {
     }
 
     private double getNewRadius(Point touchCoordinates) {
-        return BaseHelper.getLength(this.centerDot.getPoint(), touchCoordinates);
+        return getLength(this.centerDot.getPoint(), touchCoordinates);
     }
 
     public Point getCoordinatesOfCenterPoint() {
@@ -94,9 +101,9 @@ public class Circle extends BaseShape {
         this.color = color;
     }
 
-     @Override
+    @Override
     public String getLabel() {
-        return this.centerDot.getLabel();
+        return "";
     }
 
     @Override
@@ -121,7 +128,7 @@ public class Circle extends BaseShape {
 //            radiusChangeMode = true;
             return true;
         } else {
-            double length = BaseHelper.getLength(point, this.centerDot.getPoint());
+            double length = getLength(point, this.centerDot.getPoint());
             return (length < radius);
         }
     }
@@ -162,12 +169,12 @@ public class Circle extends BaseShape {
     }
 
     public boolean isBorderTouched(Point point, int deltaRadius) {
-        double length = BaseHelper.getLength(point, this.centerDot.getPoint());
+        double length = getLength(point, this.centerDot.getPoint());
         return (length < radius + deltaRadius) && (length > radius - deltaRadius);
     }
 
     public Point getNewCoordinates(Point point) {
-        double radius2 = BaseHelper.getLength(this.centerDot.getPoint(), point);
+        double radius2 = getLength(this.centerDot.getPoint(), point);
         double ratioOfTheRadii = (radius / radius2);
 
         Point dotCoordinates = new Point(0f, 0f);

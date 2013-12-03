@@ -11,9 +11,7 @@ import android.widget.TextView;
 
 import uk.ks.jarvis.simple.geometry.R;
 import uk.ks.jarvis.simple.geometry.holders.BaseHolder;
-import uk.ks.jarvis.simple.geometry.shapes.Circle;
 import uk.ks.jarvis.simple.geometry.shapes.Dot;
-import uk.ks.jarvis.simple.geometry.shapes.Line;
 import uk.ks.jarvis.simple.geometry.shapes.Shape;
 import uk.ks.jarvis.simple.geometry.shapes.ShapeList;
 
@@ -26,28 +24,14 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
     private static TextView btnDelete;
     private static TextView btnColor;
     private static TextView createFigure;
-    //    private static TextView btnDisconnectFigure;
     private final BaseHolder baseHolder;
-    private String title;
     private ShapeList shapeListWhichContainsTouchedShape;
     private Shape touchedShape;
 
     public ShapeDialog(BaseHolder baseHolder, ShapeList shapeList, Shape shape) {
         this.baseHolder = baseHolder;
         this.touchedShape = shape;
-        title = getTitle();
         this.shapeListWhichContainsTouchedShape = shapeList;
-    }
-
-    private String getTitle() {
-        if (touchedShape.getClass() == (Line.class)) {
-            return "line";
-        } else if (touchedShape.getClass() == (Circle.class)) {
-            return "circle";
-        } else if (touchedShape.getClass() == (Dot.class)) {
-            return "dot";
-        }
-        return "figure";
     }
 
     @Override
@@ -66,10 +50,6 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
 
             createFigure = (TextView) view.findViewById(R.id.create_figure);
             createFigure.setOnClickListener(this);
-
-//            btnDisconnectFigure = (TextView) view.findViewById(R.id.disconnect_figure);
-//            btnDisconnectFigure.setOnClickListener(this);
-//            btnDisconnectFigure.setText("Disconnect " + title);
         }
 
         assert view != null;
@@ -82,12 +62,7 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
         btnCancel = (Button) view.findViewById(R.id.cancelButton);
         btnCancel.setOnClickListener(this);
 
-        if (ShapeList.getShapeArray().size() == 1) {
-            title = "Properties of the " + title;
-        } else {
-            title = "Properties of the figure";
-        }
-
+        String title = "Properties";
         getDialog().setTitle(title);
         return view;
     }
@@ -95,7 +70,7 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         if (view.getId() == btnDelete.getId()) {
-//            baseHolder.removeShape(0);
+            baseHolder.getShapelist().removeAll();
             baseHolder.invalidate();
             this.dismiss();
         } else if (view.getId() == btnColor.getId()) {
@@ -110,11 +85,6 @@ public class ShapeDialog extends DialogFragment implements View.OnClickListener,
                 createFigureDialog.show(baseHolder.getActivity().getSupportFragmentManager(), "");
                 this.dismiss();
             }
-//            if (view.getId() == btnDisconnectFigure.getId()) {
-//                baseHolder.disconnectFigure(shapeListWhichContainsTouchedShape, touchedShape);
-//                baseHolder.invalidate();
-//                this.dismiss();
-//            }
         }
     }
 }
