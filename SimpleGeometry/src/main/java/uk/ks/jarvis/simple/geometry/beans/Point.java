@@ -18,6 +18,11 @@ public class Point {
         this.y = point.getY();
     }
 
+    @Override
+    public String toString() {
+        return "x : " + x + " y: " + y;
+    }
+
     public double getX() {
         return x;
     }
@@ -34,7 +39,7 @@ public class Point {
         this.y = y;
     }
 
-    public void setXY(double x,double y) {
+    public void setXY(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -46,7 +51,7 @@ public class Point {
         }
         Point that = (Point) obj;
 
-        return this.getX()==that.getX() && this.getY()==that.getY();
+        return this.getX() == that.getX() && this.getY() == that.getY();
     }
 
     public boolean nearlyEquals(Point point) {

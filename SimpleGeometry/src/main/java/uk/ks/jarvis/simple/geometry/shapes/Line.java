@@ -52,9 +52,12 @@ public class Line extends BaseShape {
     @Override
     public String toString() {
         return "Line " + label + " - x: " + Math.round(dot.getPoint().getX()) + " - y: " + Math.round(dot.getPoint().getY()) +
-                ", angle : " + round(angle);
+                ", angle : " + round(angle)+" | "+Math.round(getFirstPoint(angle).getX())+" "+Math.round(getFirstPoint(angle).getY())+" "+
+                Math.round(getSecondPoint(angle).getX())+" "+Math.round(getSecondPoint(angle).getY());
     }
-
+    public Point getFirstPoint() {
+        return getFirstPoint(angle);
+    }
     public Point getFirstPoint(double angle) {
         Point p = new Point(0f, 0f);
         if ((angle >= 0) && (angle < 45)) { // ok
@@ -87,6 +90,10 @@ public class Line extends BaseShape {
 
     public Point getSecondPoint(double angle) {
         return getFirstPoint((180 + angle) % 360);
+    }
+
+    public Point getSecondPoint() {
+        return getSecondPoint(angle);
     }
 
     @Override

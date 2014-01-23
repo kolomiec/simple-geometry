@@ -66,8 +66,12 @@ public class Zoom {
         return (angle - prvAngle) % 360;
     }
 
+    public float getCurrZoom() {
+        return currZoom;
+    }
+
     @Override
     public String toString() {
-        return "Angle " + getAngleDelta() + ", currZoom " + currZoom;
+        return "currZoom " + currZoom + ", zoomRatio " + zoomRatio;
     }
 }

@@ -9,6 +9,7 @@ import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.getProjectionDotOnLine;
 
 /**
  * Created by sayenko on 7/26/13.
@@ -70,11 +71,23 @@ public class Circle extends BaseShape {
                     newRadius = length;
                 }
 
-            } else if (shape.getClass() == Line.class) {
+            } else if (shape.getClass() == Line.class) {//ToDo change radius
+
+                Point projectionDotOnLine = getProjectionDotOnLine(centerDot,((Line) shape));
+                double length = getLength(projectionDotOnLine,centerDot.getPoint())+20;
+
+                if (length + 10 > newRadius && length - 10 < newRadius) {
+                    newRadius = length;
+                }
 
             } else if (shape.getClass() == Circle.class) {
+                double length1 = getLength(centerDot.getPoint(), ((Circle) shape).centerDot.getPoint());
+                double length2 = ((Circle) shape).getRadius() + newRadius;
 
-            } //ToDo change radius
+                if (length1 + 5 > length2 && length1 - 5 < length2) {
+                    newRadius = length1 - ((Circle) shape).getRadius();
+                }
+            }
         }
         return newRadius;
     }

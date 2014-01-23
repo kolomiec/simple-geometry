@@ -28,7 +28,6 @@ import static uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation.ini
  * Created by sayenko on 7/14/13.
  */
 public class BaseHolder extends View implements View.OnTouchListener, View.OnLongClickListener {
-
     private final Context context;
     private Zoom zoom = new Zoom();
     private Point firstPointerCoordinates = new Point(0f, 0f);
@@ -38,12 +37,11 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private FragmentActivity activity;
     private ShapeList shapes = new ShapeList();
     private Paint paint = new Paint();
-    private int NUMBER_OF_FIRST_SHAPE = 0;
+    private final int NUMBER_OF_FIRST_SHAPE = 0;
     private boolean isLongClick;
     private boolean createFigureMode = true;
     private Shape createShape = new Dot(new Point(0d, 0d), LettersGenerator.getInstance().getNextUpperCaseName());
     private CoordinateSystem coordinateSystem;
-    private boolean showScale = true;
     private boolean coordinateSystemCreated = false;
     private SharedPreferences sharedPrefs;
     private int pointerCount;
@@ -94,6 +92,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 if (createFigureMode) {
                     shapes.move(new Point(firstPointerCoordinates.getX(), firstPointerCoordinates.getY()), createShape);
                 } else if (pointerCount > 1) {
+                    coordinateSystem.changeZoom();
                     secondPointerCoordinates.setXY(motionEvent.getX(1), motionEvent.getY(1));
                     if (!scaleMode) {
                         zoom.initZoom(firstPointerCoordinates, secondPointerCoordinates);
@@ -149,7 +148,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         }
         if (!coordinateSystemCreated) {
             initSystemInformation(this);
-            coordinateSystem = new CoordinateSystem();
+            coordinateSystem = new CoordinateSystem(zoom);
             coordinateSystemCreated = true;
         }
         canvas.drawColor(ColorTheme.DARK_COLOR);
@@ -170,15 +169,18 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         paint.setStrokeWidth(2);
         shapes.draw(canvas, p);
 
-        canvas.drawText(pointerCount + " pointers, " + Math.round(firstPointerCoordinates.getX()), 30, 10, p);
+        paint.setColor(Color.WHITE);
+//        canvas.drawText(pointerCount + " pointers, " + firstPointerCoordinates.toString(), 30, 10, p);
 
-        if (shapes.size() != 0) {
-            canvas.drawText(shapes.toString(), 30, 25, p);
-        }
+//        canvas.drawText(zoom.toString(), 30, 10, p);
 
-        if (sharedPrefs.getBoolean("checkBox", false)) {
-            coordinateSystem.draw(canvas);
-        }
+//        if (shapes.size() != 0) {
+//            canvas.drawText(shapes.toString(), 30, 25, p);
+//        }
+
+//        if (sharedPrefs.getBoolean("checkBox", false)) {
+        coordinateSystem.draw(canvas);
+//        }
     }
 
     public FragmentActivity getActivity() {
@@ -198,7 +200,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         return false;
     }
 
-    public ShapeList getShapelist(){
+    public ShapeList getShapelist() {
         return shapes;
     }
 
