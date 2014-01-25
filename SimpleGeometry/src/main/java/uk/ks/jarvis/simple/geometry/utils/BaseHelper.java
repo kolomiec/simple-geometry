@@ -41,16 +41,6 @@ public class BaseHelper {
         canvas.drawText(label, x, y, BaseHelper.getLabelPaint(ColorTheme.LIGHT_COLOR));
     }
 
-    public static void setPoint(Point point, double x, double y) {
-        point.setX(x);
-        point.setY(y);
-    }
-
-    public static void setPoint(Point point1, Point point2) {
-        point1.setX(point2.getX());
-        point1.setY(point2.getY());
-    }
-
     public static double getAngleFrom2Points(Point firstPoint, Point secondPoint) {
         Point coord = new Point(abs(secondPoint.getX() - firstPoint.getX()), abs(secondPoint.getY() - firstPoint.getY()));
         double tgOfAngle = coord.getY()/coord.getX();

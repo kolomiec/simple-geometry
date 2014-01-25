@@ -18,10 +18,6 @@ public interface Shape {
 
     public boolean isTouched(Point point);
 
-    public Point checkTouchWithOtherFigure(Circle circle);
-
-    public Point checkTouchWithOtherFigure(Line line);
-
     public int getColor();
 
     public void setColor(int color);

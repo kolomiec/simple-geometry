@@ -101,14 +101,4 @@ public class Dot extends BaseShape {
     public Point getPoint() {
         return this.point;
     }
-
-    @Override
-    public Point checkTouchWithOtherFigure(Circle circle) {
-        return null;
-    }
-
-    @Override
-    public Point checkTouchWithOtherFigure(Line line) {
-        return null;
-    }
 }

@@ -119,17 +119,17 @@ public class Line extends BaseShape {
             if (shape.getClass() == Dot.class) {
                 angle = bringToDot(angle, (Dot) shape);
             } else if (shape.getClass() == Circle.class) {
-                double lengthToLine = getLengthFromPointToLine(((Circle) shape).getCenterPoint(), new Line(this.dot,(float)angle,label));
+                double lengthToLine = getLengthFromPointToLine(((Circle) shape).getCenterPoint(), new Line(this.dot, (float) angle, label));
                 if (abs(lengthToLine - ((Circle) shape).getRadius()) < 10) {
                     double angle1 = getAngleFrom2Points(this.getPoint(), ((Circle) shape).getCenterPoint());
                     double angle2 = arcsin(((Circle) shape).getRadius() / getLength(this.getPoint(), ((Circle) shape).getCenterPoint()));
 
-                    double a1 = angle1-angle2;
-                    double a2 = angle1+angle2;
+                    double a1 = angle1 - angle2;
+                    double a2 = angle1 + angle2;
 
-                    if (abs(angle-a1)>abs(angle-a2)){
+                    if (abs(angle - a1) > abs(angle - a2)) {
                         angle = a2;
-                    } else{
+                    } else {
                         angle = a1;
                     }
                 }
@@ -174,16 +174,6 @@ public class Line extends BaseShape {
             }
         }
         return false;
-    }
-
-    @Override
-    public Point checkTouchWithOtherFigure(Circle circle) {
-        return null;
-    }
-
-    @Override
-    public Point checkTouchWithOtherFigure(Line line) {
-        return null;
     }
 
     public boolean isLineTouched(Point linePoint1, Point linePoint2, Point point) {
