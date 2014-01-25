@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
@@ -23,6 +25,7 @@ import uk.ks.jarvis.simple.geometry.utils.LettersGenerator;
 import uk.ks.jarvis.simple.geometry.utils.Zoom;
 
 import static uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation.initSystemInformation;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.getProjectionPointOnLine;
 
 /**
  * Created by sayenko on 7/14/13.
@@ -33,7 +36,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private Point firstPointerCoordinates = new Point(0f, 0f);
     private Point secondPointerCoordinates = new Point(0f, 0f);
     private Point downCoordinates = new Point(0f, 0f);
-    private boolean isTouchedShape;
     private FragmentActivity activity;
     private ShapeList shapes = new ShapeList();
     private Paint paint = new Paint();
@@ -136,16 +138,40 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         }
 
         shapes.add(NUMBER_OF_FIRST_SHAPE, createShape);
-        isTouchedShape = true;
+    }
+
+    public void dfgdfg() {
+        ListPreference listPreference = new ListPreference(context);
+        Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                // newValue is the value you choose
+                return false;
+            }
+        };
+
+        listPreference.setOnPreferenceChangeListener(listener);
     }
 
     private void refresh(Canvas canvas, Paint p) {
+
+        /**нісенітниця*/
         String s = sharedPrefs.getString("list", "-1");
         if ((s.equals("2")) && (ColorTheme.isLightTheme)) {
             ColorTheme.setDarkTheme();
         } else if ((s.equals("1") && (ColorTheme.isDarkTheme))) {
             ColorTheme.setLightTheme();
         }
+
+
+        //CharSequence[] charSequence = listPreference.getEntryValues();
+
+
+//        assert charSequence != null;
+//        if (charSequence[1] == "1"){
+//
+//        }
+
         if (!coordinateSystemCreated) {
             initSystemInformation(this);
             coordinateSystem = new CoordinateSystem(zoom);
@@ -170,13 +196,21 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         shapes.draw(canvas, p);
 
         paint.setColor(Color.WHITE);
-//        canvas.drawText(pointerCount + " pointers, " + firstPointerCoordinates.toString(), 30, 10, p);
 
 //        canvas.drawText(zoom.toString(), 30, 10, p);
 
-//        if (shapes.size() != 0) {
-//            canvas.drawText(shapes.toString(), 30, 25, p);
-//        }
+        if (shapes.size() != 0) {
+            for (Shape shape : ShapeList.getShapeArray()) {
+                if (shape.getClass() == Line.class) {
+                    Point a = getProjectionPointOnLine(new Point(0f, 0f), ((Line) shape));
+                    canvas.drawText(a.toString(), 30, 10, p);
+                    canvas.drawCircle((float) a.getX(), (float) a.getY(), 7, p);
+                    canvas.drawLine(0f, 0f, (float) a.getX(), (float) a.getY(), p);
+                    break;
+                }
+            }
+            canvas.drawText(shapes.toString(), 30, 25, p);
+        }
 
 //        if (sharedPrefs.getBoolean("checkBox", false)) {
         coordinateSystem.draw(canvas);

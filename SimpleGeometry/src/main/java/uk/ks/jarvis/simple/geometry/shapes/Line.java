@@ -13,6 +13,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getAngleFrom2Points;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.arcsin;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.getLengthFromPointToLine;
 import static uk.ks.jarvis.simple.geometry.utils.Mathematics.tg;
 
 /**
@@ -52,12 +54,14 @@ public class Line extends BaseShape {
     @Override
     public String toString() {
         return "Line " + label + " - x: " + Math.round(dot.getPoint().getX()) + " - y: " + Math.round(dot.getPoint().getY()) +
-                ", angle : " + round(angle)+" | "+Math.round(getFirstPoint(angle).getX())+" "+Math.round(getFirstPoint(angle).getY())+" "+
-                Math.round(getSecondPoint(angle).getX())+" "+Math.round(getSecondPoint(angle).getY());
+                ", angle : " + round(angle) + " | " + Math.round(getFirstPoint(angle).getX()) + " " + Math.round(getFirstPoint(angle).getY()) + " " +
+                Math.round(getSecondPoint(angle).getX()) + " " + Math.round(getSecondPoint(angle).getY());
     }
+
     public Point getFirstPoint() {
         return getFirstPoint(angle);
     }
+
     public Point getFirstPoint(double angle) {
         Point p = new Point(0f, 0f);
         if ((angle >= 0) && (angle < 45)) { // ok
@@ -114,6 +118,21 @@ public class Line extends BaseShape {
         for (Shape shape : shapeList) {
             if (shape.getClass() == Dot.class) {
                 angle = bringToDot(angle, (Dot) shape);
+            } else if (shape.getClass() == Circle.class) {
+                double lengthToLine = getLengthFromPointToLine(((Circle) shape).getCenterPoint(), new Line(this.dot,(float)angle,label));
+                if (abs(lengthToLine - ((Circle) shape).getRadius()) < 10) {
+                    double angle1 = getAngleFrom2Points(this.getPoint(), ((Circle) shape).getCenterPoint());
+                    double angle2 = arcsin(((Circle) shape).getRadius() / getLength(this.getPoint(), ((Circle) shape).getCenterPoint()));
+
+                    double a1 = angle1-angle2;
+                    double a2 = angle1+angle2;
+
+                    if (abs(angle-a1)>abs(angle-a2)){
+                        angle = a2;
+                    } else{
+                        angle = a1;
+                    }
+                }
             }
         }
 

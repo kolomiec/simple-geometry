@@ -8,8 +8,9 @@ import java.util.List;
 import uk.ks.jarvis.simple.geometry.beans.Point;
 import uk.ks.jarvis.simple.geometry.utils.BaseHelper;
 
+import static java.lang.Math.abs;
 import static uk.ks.jarvis.simple.geometry.utils.BaseHelper.getLength;
-import static uk.ks.jarvis.simple.geometry.utils.Mathematics.getProjectionDotOnLine;
+import static uk.ks.jarvis.simple.geometry.utils.Mathematics.getLengthFromPointToLine;
 
 /**
  * Created by sayenko on 7/26/13.
@@ -67,24 +68,22 @@ public class Circle extends BaseShape {
             if (shape.getClass() == Dot.class) {
                 double length = getLength(centerDot.getPoint(), ((Dot) shape).getPoint());
 
-                if (length + 5 > newRadius && length - 5 < newRadius) {
+                if (abs(length - newRadius) < 5) {
                     newRadius = length;
                 }
 
-            } else if (shape.getClass() == Line.class) {//ToDo change radius
+            } else if (shape.getClass() == Line.class) {
+                double lengthToLine = getLengthFromPointToLine(centerDot.getPoint(), (Line) shape);
 
-                Point projectionDotOnLine = getProjectionDotOnLine(centerDot,((Line) shape));
-                double length = getLength(projectionDotOnLine,centerDot.getPoint())+20;
-
-                if (length + 10 > newRadius && length - 10 < newRadius) {
-                    newRadius = length;
+                if (abs(lengthToLine - newRadius) < 10) {
+                    newRadius = lengthToLine;
                 }
 
             } else if (shape.getClass() == Circle.class) {
                 double length1 = getLength(centerDot.getPoint(), ((Circle) shape).centerDot.getPoint());
                 double length2 = ((Circle) shape).getRadius() + newRadius;
 
-                if (length1 + 5 > length2 && length1 - 5 < length2) {
+                if (abs(length1 - length2) < 5) {
                     newRadius = length1 - ((Circle) shape).getRadius();
                 }
             }
@@ -96,7 +95,7 @@ public class Circle extends BaseShape {
         return getLength(this.centerDot.getPoint(), touchCoordinates);
     }
 
-    public Point getCoordinatesOfCenterPoint() {
+    public Point getCenterPoint() {
         return centerDot.getPoint();
     }
 
@@ -148,12 +147,12 @@ public class Circle extends BaseShape {
 
     @Override
     public Point checkTouchWithOtherFigure(Circle circle) {
-//        double length1 = BaseHelper.getLength(this.getCoordinatesOfCenterPoint(), circle.getCoordinatesOfCenterPoint());
+//        double length1 = BaseHelper.getLength(this.getCenterPoint(), circle.getCenterPoint());
 //        double length2 = this.getRadius() + circle.getRadius();
 //
 //        if (((length1) < (length2 + 15)) && ((length1) > (length2 - 15))) {
-//            this.getNewCoordinates(circle.getCoordinatesOfCenterPoint());
-//            Point newCoordinates = new Point(getCoordinatesOfBorderOfCircle(centerDot.getPoint(), circle.getCoordinatesOfCenterPoint(), length2));
+//            this.getNewCoordinates(circle.getCenterPoint());
+//            Point newCoordinates = new Point(getCoordinatesOfBorderOfCircle(centerDot.getPoint(), circle.getCenterPoint(), length2));
 //            return new Point(centerDot.getPoint().getX() - newCoordinates.getX(), centerDot.getPoint().getY() - newCoordinates.getY());
 //        }
         return null;
@@ -161,9 +160,9 @@ public class Circle extends BaseShape {
 
     @Override
     public Point checkTouchWithOtherFigure(Line line) {
-//        Point p = line.getNewCoordinates(this.getCoordinatesOfCenterPoint());
+//        Point p = line.getNewCoordinates(this.getCenterPoint());
 //        if (line.isLineTouched(p)) {
-//            double length = BaseHelper.getLength(p, this.getCoordinatesOfCenterPoint());
+//            double length = BaseHelper.getLength(p, this.getCenterPoint());
 //            if (((length) < (this.radius + 15)) && ((length) > (this.radius - 15))) {
 //                Point delta = new Point(this.getNewCoordinates(p));
 //                setPoint(delta, p.getX() - delta.getX(), p.getY() - delta.getY());

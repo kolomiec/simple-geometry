@@ -60,7 +60,6 @@ public class CoordinateSystem {
     private void drawLabelOnYAxis(Canvas canvas) {
         int labelsCount = (int) Math.round((startPointYAxis.getY()) / labelStep);
         SystemInformation.COUNT_LABEL_BY_Y_AXIS = labelsCount;
-        int magicNumber = 5; // :) ToDo Rename
         Point cursorPos = new Point(startPointYAxis.getX(), startPointXAxis.getY() - labelStep);
         paint.setStrokeWidth(labelWidth);
         paint.setTextSize(textWidth);
@@ -69,7 +68,7 @@ public class CoordinateSystem {
             canvas.drawLine((float) cursorPos.getX() - labelHeight, (float) cursorPos.getY(), (float) cursorPos.getX() + labelHeight, (float) cursorPos.getY(), paint);
             paint.setColor(ColorTheme.LIGHT_COLOR);
             String s = getString(((i + 1) * Math.pow(10, delta)));
-            canvas.drawText(s, (float) cursorPos.getX() - textWidth * 2-labelHeight, (float) cursorPos.getY() + magicNumber, paint);
+            canvas.drawText(s, (float) cursorPos.getX() - textWidth * 2-labelHeight, (float) cursorPos.getY()+4, paint);
             cursorPos.setY(cursorPos.getY() - labelStep);
         }
     }
@@ -84,7 +83,6 @@ public class CoordinateSystem {
     private void drawLabelOnXAxis(Canvas canvas) {
         int labelsCount = (int) Math.round((SystemInformation.DISPLAY_WIDTH - startPointXAxis.getX()) / labelStep);
         SystemInformation.COUNT_LABEL_BY_X_AXIS = labelsCount;
-        int magicNumber = 7; // :) ToDo Rename
         Point cursorPos = new Point(startPointXAxis.getX() + labelStep, startPointXAxis.getY());
         paint.setStrokeWidth(labelWidth);
         paint.setTextSize(textWidth);
@@ -92,7 +90,8 @@ public class CoordinateSystem {
             paint.setColor(Color.GRAY);
             canvas.drawLine((float) cursorPos.getX(), (float) cursorPos.getY() - labelHeight, (float) cursorPos.getX(), (float) cursorPos.getY() + labelHeight, paint);
             paint.setColor(ColorTheme.LIGHT_COLOR);
-            canvas.drawText(getString(i + 1), (float) cursorPos.getX() - magicNumber, (float) cursorPos.getY() + labelHeight + textWidth, paint);
+            String s = getString(((i + 1) * Math.pow(10, delta)));
+            canvas.drawText(s, (float) cursorPos.getX() - textWidth, (float) cursorPos.getY() + labelHeight + textWidth, paint);
             cursorPos.setX(cursorPos.getX() + labelStep);
         }
     }
