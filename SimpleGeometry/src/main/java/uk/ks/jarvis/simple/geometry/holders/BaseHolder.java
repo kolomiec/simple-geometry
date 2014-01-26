@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
@@ -45,7 +47,8 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private SharedPreferences sharedPrefs;
     private int pointerCount;
     private boolean scaleMode = false;
-
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
+    private boolean drawCoordSystem;
 
     public BaseHolder(Context context) {
         super(context);
@@ -63,11 +66,34 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         this.context = context;
         this.activity = activity;
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                if (key.equals("list_themes")) {
+                    String s = sharedPrefs.getString(key, "-1");
+                    if ((s.equals("2")) && (ColorTheme.isLightTheme)) {
+                        ColorTheme.setDarkTheme();
+                    } else if ((s.equals("1") && (ColorTheme.isDarkTheme))) {
+                        ColorTheme.setLightTheme();
+                    }
+                } else if (key.equals("checkBox_coordSystem")) {
+                    drawCoordSystem = sharedPrefs.getBoolean(key, false);
+                }
+//                Toast.makeText(getContext(), key, Toast.LENGTH_SHORT).show();
+            }
+        };
+
         Toast.makeText(context, "Touch the screen to draw a dot.", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onDraw(Canvas canvas) {
+        if (!coordinateSystemCreated) {
+            initSystemInformation(this);
+            coordinateSystem = new CoordinateSystem(this, zoom);
+            coordinateSystemCreated = true;
+        }
+        listener.onSharedPreferenceChanged(sharedPrefs, "checkBox_coordSystem");
+        listener.onSharedPreferenceChanged(sharedPrefs, "list_themes");
         refresh(canvas, paint);
     }
 
@@ -112,12 +138,10 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 break;
 
             case MotionEvent.ACTION_UP:
-                if (scaleMode) {
-                    scaleMode = false;
-                }
-                if (createFigureMode) {
-                    createFigureMode = false;
-                }
+                scaleMode = false;
+                createFigureMode = false;
+                isLongClick = false;
+//                invalidate();
                 break;
             default:
                 break;
@@ -133,30 +157,56 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
             ((Dot) createShape).getPoint().setX(motionEvent.getX());
             ((Dot) createShape).getPoint().setY(motionEvent.getY());
         }
-
         shapes.add(NUMBER_OF_FIRST_SHAPE, createShape);
     }
 
     private void refresh(Canvas canvas, Paint p) {
-        //ToDo Fix...
-        String s = sharedPrefs.getString("list", "-1");
-        if ((s.equals("2")) && (ColorTheme.isLightTheme)) {
-            ColorTheme.setDarkTheme();
-        } else if ((s.equals("1") && (ColorTheme.isDarkTheme))) {
-            ColorTheme.setLightTheme();
-        }
 
-        if (!coordinateSystemCreated) {
-            initSystemInformation(this);
-            coordinateSystem = new CoordinateSystem(zoom);
-            coordinateSystemCreated = true;
-        }
         canvas.drawColor(ColorTheme.DARK_COLOR);
 
+        drawGradient(canvas);
+
+//        drawPointers(canvas);
+
+        paint.setStrokeWidth(2);
+        shapes.draw(canvas, p);
+
+//        paint.setColor(Color.WHITE);
+
+        if (drawCoordSystem) {
+            coordinateSystem.draw(canvas);
+        }
+    }
+
+    private void drawGradient(Canvas canvas) {
+        if (isLongClick) {
+            try {
+                Shape clickedShape = getClickedShapeFromShapeList();
+                if (clickedShape.getClass() == Dot.class) {
+                    Point point = ((Dot) clickedShape).getPoint();
+
+                    int[] colors = new int[4];
+                    colors[0] = Color.TRANSPARENT;
+                    colors[1] = Color.TRANSPARENT;
+                    colors[2] = Color.argb(100,0,255,255);
+                    colors[3] = Color.TRANSPARENT;
+
+                    RadialGradient shader = new RadialGradient((float) point.getX(), (float) point.getY(), 60,
+                            colors, null, Shader.TileMode.CLAMP);
+                    Paint paint = new Paint();
+                    paint.setColor(Color.WHITE);
+                    paint.setShader(shader);
+                    canvas.drawCircle((float) point.getX(), (float) point.getY(), 60, paint);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private void drawPointers(Canvas canvas) {
         if (pointerCount > 0) {
             paint.setColor(Color.argb(50, 0, 0, 250));
             canvas.drawCircle((float) firstPointerCoordinates.getX(), (float) firstPointerCoordinates.getY(), 40, paint);
-
             if (pointerCount > 1) {
                 paint.setColor(Color.argb(50, 250, 0, 0));
                 canvas.drawCircle((float) secondPointerCoordinates.getX(), (float) secondPointerCoordinates.getY(), 40, paint);
@@ -164,15 +214,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 paint.setColor(Color.argb(50, 0, 250, 0));
                 canvas.drawLine((float) firstPointerCoordinates.getX(), (float) firstPointerCoordinates.getY(), (float) secondPointerCoordinates.getX(), (float) secondPointerCoordinates.getY(), paint);
             }
-        }
-
-        paint.setStrokeWidth(2);
-        shapes.draw(canvas, p);
-
-        paint.setColor(Color.WHITE);
-
-        if (sharedPrefs.getBoolean("checkBox", false)) {
-            coordinateSystem.draw(canvas);
         }
     }
 
@@ -193,7 +234,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         return false;
     }
 
-    public ShapeList getShapelist() {
+    public ShapeList getShapeList() {
         return shapes;
     }
 

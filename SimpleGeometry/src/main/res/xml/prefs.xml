@@ -8,11 +8,11 @@
         <CheckBoxPreference
                 android:title="Coordinate System"
                 android:defaultValue="true"
-                android:key="checkBox"
+                android:key="checkBox_coordSystem"
                 android:summary="Turn on/off coordinate system"/>
         <ListPreference
                 android:title="Theme"
-                android:key="list"
+                android:key="list_themes"
                 android:summary="Choose color theme"
                 android:entries="@array/list"
                 android:entryValues="@array/lValues"
@@ -24,7 +24,7 @@
         android:key="locale">
         <ListPreference
                 android:title="Language"
-                android:key="langList"
+                android:key="list_lang"
                 android:summary="Choose english language"
                 android:entries="@array/langList"
                 android:entryValues="@array/langValues"

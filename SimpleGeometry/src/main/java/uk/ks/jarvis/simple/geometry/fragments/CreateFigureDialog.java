@@ -38,11 +38,6 @@ public class CreateFigureDialog extends DialogFragment implements View.OnClickLi
         this.dot = dot;
     }
 
-//    public CreateFigureDialog(BaseHolder baseHolder) {
-//        super();
-//        this.baseHolder = baseHolder;
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.create_figure_dialog, container);

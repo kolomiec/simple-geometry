@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import uk.ks.jarvis.simple.geometry.beans.Point;
+import uk.ks.jarvis.simple.geometry.holders.BaseHolder;
 import uk.ks.jarvis.simple.geometry.utils.ColorTheme;
 import uk.ks.jarvis.simple.geometry.utils.Zoom;
 
@@ -27,10 +28,11 @@ public class CoordinateSystem {
     private Zoom zoom;
     private int delta = 0;
 
-    public CoordinateSystem(Zoom zoom) {
+    public CoordinateSystem(BaseHolder baseHolder, Zoom zoom) {
         paint = new Paint();
         paint.setColor(ColorTheme.LIGHT_COLOR);
         this.zoom = zoom;
+        baseHolder.getHeight();
     }
 
     public void draw(Canvas canvas) {
@@ -40,7 +42,7 @@ public class CoordinateSystem {
 
     public void changeZoom() {
         labelStep *= zoom.getZoomRatio();
-        if (labelStep > 150) {
+        if (labelStep > 100) {
             labelStep = labelStep / 10;
             delta--;
         }
@@ -68,7 +70,7 @@ public class CoordinateSystem {
             canvas.drawLine((float) cursorPos.getX() - labelHeight, (float) cursorPos.getY(), (float) cursorPos.getX() + labelHeight, (float) cursorPos.getY(), paint);
             paint.setColor(ColorTheme.LIGHT_COLOR);
             String s = getString(((i + 1) * Math.pow(10, delta)));
-            canvas.drawText(s, (float) cursorPos.getX() - textWidth * 2-labelHeight, (float) cursorPos.getY()+4, paint);
+            canvas.drawText(s, (float) cursorPos.getX() - textWidth * 2 - labelHeight, (float) cursorPos.getY() + 4, paint);
             cursorPos.setY(cursorPos.getY() - labelStep);
         }
     }
@@ -98,11 +100,10 @@ public class CoordinateSystem {
 
     private String getString(double count) {
         String s;
-        if (count>=1000){
+        if (count >= 1000) {
             s = Double.toString(count);
-            s = s.toCharArray()[0]+"."+s.toCharArray()[1]+"E"+delta;
-        } else
-        if (count >= 10) {
+            s = s.toCharArray()[0] + "." + s.toCharArray()[1] + "E" + delta;
+        } else if (count >= 10) {
             long value = Math.round(count);
             s = Long.toString(value);
         } else {
