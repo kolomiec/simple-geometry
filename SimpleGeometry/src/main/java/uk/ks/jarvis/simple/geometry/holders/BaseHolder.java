@@ -81,7 +81,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
 //                Toast.makeText(getContext(), key, Toast.LENGTH_SHORT).show();
             }
         };
-
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         Toast.makeText(context, "Touch the screen to draw a dot.", Toast.LENGTH_LONG).show();
     }
 
@@ -141,7 +141,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 scaleMode = false;
                 createFigureMode = false;
                 isLongClick = false;
-//                invalidate();
                 break;
             default:
                 break;
@@ -170,8 +169,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
 
         paint.setStrokeWidth(2);
         shapes.draw(canvas, p);
-
-//        paint.setColor(Color.WHITE);
 
         if (drawCoordSystem) {
             coordinateSystem.draw(canvas);
@@ -228,8 +225,8 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
             if (clickedShape != null) {
                 ShapeDialog c = new ShapeDialog(this, shapes, clickedShape);
                 c.show(activity.getSupportFragmentManager(), "");
+                return true;
             }
-            return true;
         }
         return false;
     }

@@ -22,6 +22,7 @@ import static uk.ks.jarvis.simple.geometry.utils.Mathematics.arctg;
 public class BaseHelper {
     public static Paint getLabelPaint(int color) {
         Paint labelPaint = new Paint();
+        labelPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         labelPaint.setColor(color);
         labelPaint.setTextSize(35.0f);
         return labelPaint;

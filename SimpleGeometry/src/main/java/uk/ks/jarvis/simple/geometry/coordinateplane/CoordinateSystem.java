@@ -31,6 +31,7 @@ public class CoordinateSystem {
     public CoordinateSystem(BaseHolder baseHolder, Zoom zoom) {
         paint = new Paint();
         paint.setColor(ColorTheme.LIGHT_COLOR);
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         this.zoom = zoom;
         baseHolder.getHeight();
     }
