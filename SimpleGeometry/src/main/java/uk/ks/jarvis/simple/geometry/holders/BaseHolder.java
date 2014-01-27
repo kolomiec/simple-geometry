@@ -31,6 +31,7 @@ import static uk.ks.jarvis.simple.geometry.coordinateplane.SystemInformation.ini
  */
 public class BaseHolder extends View implements View.OnTouchListener, View.OnLongClickListener {
     private final Context context;
+    private final int NUMBER_OF_FIRST_SHAPE = 0;
     private Zoom zoom = new Zoom();
     private Point firstPointerCoordinates = new Point(0f, 0f);
     private Point secondPointerCoordinates = new Point(0f, 0f);
@@ -38,7 +39,6 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private FragmentActivity activity;
     private ShapeList shapes = new ShapeList();
     private Paint paint = new Paint();
-    private final int NUMBER_OF_FIRST_SHAPE = 0;
     private boolean isLongClick;
     private boolean createFigureMode = true;
     private Shape createShape = new Dot(new Point(0d, 0d), LettersGenerator.getInstance().getNextUpperCaseName());
@@ -49,6 +49,8 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
     private boolean scaleMode = false;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private boolean drawCoordSystem;
+    private boolean useZoom;
+    private boolean useTurn;
 
     public BaseHolder(Context context) {
         super(context);
@@ -77,6 +79,10 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                     }
                 } else if (key.equals("checkBox_coordSystem")) {
                     drawCoordSystem = sharedPrefs.getBoolean(key, false);
+                } else if (key.equals("checkBox_zoom")) {
+                    useZoom = sharedPrefs.getBoolean(key, false);
+                } else if (key.equals("checkBox_turn")) {
+                    useTurn = sharedPrefs.getBoolean(key, false);
                 }
 //                Toast.makeText(getContext(), key, Toast.LENGTH_SHORT).show();
             }
@@ -94,6 +100,8 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
         }
         listener.onSharedPreferenceChanged(sharedPrefs, "checkBox_coordSystem");
         listener.onSharedPreferenceChanged(sharedPrefs, "list_themes");
+        listener.onSharedPreferenceChanged(sharedPrefs, "checkBox_zoom");
+        listener.onSharedPreferenceChanged(sharedPrefs, "checkBox_turn");
         refresh(canvas, paint);
     }
 
@@ -117,15 +125,18 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                 if (createFigureMode) {
                     shapes.move(new Point(firstPointerCoordinates.getX(), firstPointerCoordinates.getY()), createShape);
                 } else if (pointerCount > 1) {
-                    coordinateSystem.changeZoom();
                     secondPointerCoordinates.setXY(motionEvent.getX(1), motionEvent.getY(1));
                     if (!scaleMode) {
                         zoom.initZoom(firstPointerCoordinates, secondPointerCoordinates);
                         scaleMode = true;
                     }
                     zoom.zoom(firstPointerCoordinates, secondPointerCoordinates);
-                    shapes.zoom(zoom.getZoomPoint(), zoom.getZoomRatio(), zoom.getMoveDelta());
-                    shapes.turn(zoom.getZoomPoint(), zoom.getAngleDelta());
+                    if (useZoom) {
+                        shapes.zoom(zoom.getZoomPoint(), zoom.getZoomRatio(), zoom.getMoveDelta());
+                        coordinateSystem.changeZoom();
+                    }
+                    if (useTurn) shapes.turn(zoom.getZoomPoint(), zoom.getAngleDelta());
+
                     if (isLongClick) {
                         isLongClick = false;
                     }
@@ -185,7 +196,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                     int[] colors = new int[4];
                     colors[0] = Color.TRANSPARENT;
                     colors[1] = Color.TRANSPARENT;
-                    colors[2] = Color.argb(100,0,255,255);
+                    colors[2] = Color.argb(100, 0, 255, 255);
                     colors[3] = Color.TRANSPARENT;
 
                     RadialGradient shader = new RadialGradient((float) point.getX(), (float) point.getY(), 60,
@@ -193,6 +204,7 @@ public class BaseHolder extends View implements View.OnTouchListener, View.OnLon
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);
                     paint.setShader(shader);
+                    paint.setFlags(Paint.ANTI_ALIAS_FLAG);
                     canvas.drawCircle((float) point.getX(), (float) point.getY(), 60, paint);
                 }
             } catch (Exception ignored) {

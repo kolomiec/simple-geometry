@@ -20,7 +20,22 @@
         </ListPreference>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Locale"
+            android:title="Features"
+            android:key="features">
+
+        <CheckBoxPreference
+                android:title="Zoom"
+                android:defaultValue="true"
+                android:key="checkBox_zoom"
+                android:summary="Turn on/off zoom"/>
+        <CheckBoxPreference
+                android:title="Turn"
+                android:defaultValue="true"
+                android:key="checkBox_turn"
+                android:summary="Turn on/off turn"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="Locale"
         android:key="locale">
         <ListPreference
                 android:title="Language"

@@ -1,5 +1,7 @@
 package uk.ks.jarvis.simple.geometry.beans;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by sayenko on 7/14/13.
  */
@@ -55,8 +57,7 @@ public class Point {
     }
 
     public boolean nearlyEquals(Point point) {
-        int delta = 8;
-        return (point.getX() < this.getX() + delta) && (point.getX() > this.getX() - delta) &&
-                (point.getY() < this.getY() + delta) && (point.getY() > this.getY() - delta);
+        int delta = 7;
+        return (abs(point.getX() - this.getX()) < delta) && (abs(point.getY() - this.getY()) < delta);
     }
 }

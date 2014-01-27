@@ -47,7 +47,7 @@ public class CoordinateSystem {
             labelStep = labelStep / 10;
             delta--;
         }
-        if (labelStep < 15) {
+        if (labelStep < 17) {
             labelStep = labelStep * 10;
             delta++;
         }
@@ -104,7 +104,7 @@ public class CoordinateSystem {
         if (count >= 1000) {
             s = Double.toString(count);
             s = s.toCharArray()[0] + "." + s.toCharArray()[1] + "E" + delta;
-        } else if (count >= 10) {
+        } else if (count >= 1) {
             long value = Math.round(count);
             s = Long.toString(value);
         } else {
